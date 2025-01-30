@@ -12,11 +12,11 @@ import Error from "./pages/error";
     errorElement: <Error />,
   },
   {
-    path: "/signup",
+    path: "/",
     element: <SignUp />,
     errorElement: <Error />,
   },{
-    path: "/",
+    path: "/signup",
     element: <Home />,
     errorElement: <Error />,
   },
