@@ -1,4 +1,8 @@
 import React from "react";
+import { PiNotepadLight } from "react-icons/pi";
+import { PiPill } from "react-icons/pi";
+import { PiStethoscope } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 const PatientInfo = () => {
   const patientInfo = [
@@ -9,31 +13,67 @@ const PatientInfo = () => {
     { name: "Medical Conditions", value: ["Diabetes", "HBP"] },
     { name: "Alergies", value: "None" },
   ];
+
+  const patientRecord = [
+    {
+      name: "Medical Information",
+      icon: <PiNotepadLight />,
+      link: "#",
+    },
+    {
+      name: "Prescriptions",
+      icon: <PiPill />,
+      link: "#",
+    },
+    {
+      name: "Lab Results",
+      icon: <PiStethoscope />,
+      link: "#",
+    },
+  ];
   return (
     <div>
       <div className="w-full p-4">
         <div className="bg-gray-300 flex items-center justify-between p-4 rounded-lg">
           <div>
             <h2 className="font-bold text-2xl">Patient Information</h2>
-            <ul className="grid grid-cols-2 gap-2 text-base font-medium p-3">
+            <ul className="grid grid-cols-2 gap-4 text-base font-medium p-2">
               {patientInfo.map((info, index) => {
                 if (Array.isArray(info.value)) {
                   return (
                     <li key={index} className="border-b mt-2">
-                      {info.name}:
+                      {info.name}: &nbsp;
                       {info.value.map((val, index) => val).join(", ")}
                     </li>
                   );
                 } else {
                   return (
                     <li key={index} className="border-b mt-2">
-                      {info.name}:{info.value}
+                      {info.name}: &nbsp;{info.value}
                     </li>
                   );
                 }
               })}
             </ul>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          {patientRecord.map((rec, index) => {
+            return (
+              <Link to={rec.link}>
+                <div className="bg-gray-300 rounded-lg text-center h-40 text-3xl font-medium flex flex-col items-center justify-center">
+                  <div className="text-center">{rec.icon}</div>
+                  <h3 className="mt-2">{rec.name}</h3>
+                </div>
+              </Link>
+            );
+          })}
+          {/* <div className="w-[45%] h-40 bg-gray-300 rounded-lg text-center">
+            <h3>Medical Reports</h3>
+          </div>
+          <div className="w-[45%] bg-gray-300 h-40 rounded-lg text-center">
+            <h3>Medical Reports</h3>
+          </div> */}
         </div>
       </div>
     </div>

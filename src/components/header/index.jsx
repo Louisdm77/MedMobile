@@ -5,7 +5,7 @@ import { FaRegUser } from "react-icons/fa";
 
 const Header = () => {
   return (
-    <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-6 ">
+    <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-3 ">
       <div className=" ">
         <h1 className="font-extrabold text-2xl">Welcome, User</h1>
         <p className="font-medium">How may we be of help today?</p>
