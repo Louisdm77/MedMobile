@@ -37,7 +37,7 @@ const PatientInfo = () => {
         <div className="bg-gray-300 flex items-center justify-between p-4 rounded-lg">
           <div>
             <h2 className="font-bold text-2xl">Patient Information</h2>
-            <ul className="grid grid-cols-2 gap-4 text-base font-medium p-2">
+            <ul className="grid grid-cols-2 gap-4 text-base font-medium p-1">
               {patientInfo.map((info, index) => {
                 if (Array.isArray(info.value)) {
                   return (
@@ -68,12 +68,6 @@ const PatientInfo = () => {
               </Link>
             );
           })}
-          {/* <div className="w-[45%] h-40 bg-gray-300 rounded-lg text-center">
-            <h3>Medical Reports</h3>
-          </div>
-          <div className="w-[45%] bg-gray-300 h-40 rounded-lg text-center">
-            <h3>Medical Reports</h3>
-          </div> */}
         </div>
       </div>
     </div>

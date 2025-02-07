@@ -1,0 +1,58 @@
+import React from "react";
+import Layout from "../../components/layout";
+import Header from "../../components/header";
+import Applications from "../../components/applications";
+import MyDatePicker from "../../components/myDatePicker";
+import Emergency from "../../components/emergency";
+import { IoSearchOutline } from "react-icons/io5";
+import { FaRegBell, FaRegUser } from "react-icons/fa"; // Combined imports for FaRegBell and FaRegUser
+import { useUserAuth } from "../../assets/context/userAuthContext";
+
+
+const Appointments = () => {
+  return (
+    <div>
+      <Layout>
+        <div className="w-full ">
+          <div>
+            <div className="p-6 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-4">
+              <div>
+                <h1 className="font-extrabold text-2xl">Appointments</h1>
+                <p className="">Manage and track your medical appointments.</p>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  className="rounded-full w-full h-10 p-2 bg-gray-300"
+                />
+                <button className="absolute right-3 top-3 text-xl">
+                  <IoSearchOutline />
+                </button>
+              </div>
+              <div className="flex justify-between items-center">
+                <button className="bg-gray-300 rounded-full p-4 text-lg">
+                  <FaRegBell />
+                </button>
+                <button className="bg-gray-300 rounded-full p-4 text-lg">
+                  <FaRegUser />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div className="w-[60%]">
+              <Applications />
+            </div>
+            <div className="w-[40%] p-2">
+              <MyDatePicker />
+              <Emergency />
+            </div>
+          </div>
+        </div>
+      </Layout>
+    </div>
+  );
+};
+
+export default Appointments;

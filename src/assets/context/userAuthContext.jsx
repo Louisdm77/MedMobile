@@ -27,15 +27,15 @@ const signUp = async (email, password) => {
   }
 };
 
-const googleSignIn = async () => {
-  try {
-    const googleAuthProvider = new GoogleAuthProvider();
-    await signInWithPopup(auth, googleAuthProvider);
-  } catch (err) {
-    console.log(err);
-    throw err; // Rethrow the error so it can be handled by the caller
-  }
-};
+// const googleSignIn = async () => {
+//   try {
+//     const googleAuthProvider = new GoogleAuthProvider();
+//     await signInWithPopup(auth, googleAuthProvider);
+//   } catch (err) {
+//     console.log(err);
+//     throw err; // Rethrow the error so it can be handled by the caller
+//   }
+// };
 
 const logOut = async () => {
   try {
@@ -51,6 +51,7 @@ const userAuthContext = createContext({});
 export const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [clicked, setClicked] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -66,8 +67,10 @@ export const UserAuthProvider = ({ children }) => {
     loading,
     signUp,
     logOut,
-    googleSignIn,
+    // googleSignIn,
     login,
+    clicked,
+    setClicked,
   };
 
   return (

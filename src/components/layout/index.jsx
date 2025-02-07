@@ -3,8 +3,8 @@ import SideBar from "../sideBar";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex justify-between h-[100vh]">
-      <aside className="w-[25%] h-full">
+    <div className="flex justify-between h-full opacity-0 lg:opacity-100">
+      <aside className="w-[25%] h-auto">
         <SideBar />
       </aside>
       <div className="w-full">{children}</div>

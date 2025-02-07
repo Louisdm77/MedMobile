@@ -4,7 +4,9 @@ import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Home from "./pages/home";
 import Error from "./pages/error";
+import Appointments from "./pages/appointments";
 import ProtectedRoutes from "./components/protectedRoutes";
+import Profile from "./pages/profile"
 
 const router = createBrowserRouter([
   {
@@ -13,6 +15,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/appointments",
+        element: <Appointments />,
         errorElement: <Error />,
       },
       // {
@@ -25,11 +32,11 @@ const router = createBrowserRouter([
       //   element: <Myphotos />,
       //   errorElement: <Error />,
       // },
-      // {
-      //   path: "/profile",
-      //   element: <Profile />,
-      //   errorElement: <Error />,
-      // },
+      {
+        path: "/profile",
+        element: <Profile />,
+        errorElement: <Error />,
+      },
     ],
   },
   {
