@@ -7,9 +7,10 @@ import { FaDotCircle } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
+import { getAuth } from "@firebase/auth";
 
 const SignUp = () => {
-  const { signUp, user } = useUserAuth();
+  const { signUp, user, data, setData } = useUserAuth();
   const navigate = useNavigate(); // Add useNavigate for redirection
   const [signupPage, setSignupPage] = useState(1);
   const [progress, setProgress] = useState(0);
@@ -20,17 +21,6 @@ const SignUp = () => {
     confirmPassword: "",
   };
   const [userInfo, setUserInfo] = useState(initialValue);
-  const [data, setData] = useState({
-    fullName: "",
-    phoneNumber: "",
-    email: "",
-    dob: "",
-    hospital: "",
-    hospitalNum: "",
-    emergencyContact: "",
-    emergencyContactNum: "",
-    insuranceProvider: "",
-  });
 
   const [dataList, setDataList] = useState([]);
 
@@ -39,13 +29,41 @@ const SignUp = () => {
     if (validateFields()) {
       try {
         const response = await signUp(userInfo.email, userInfo.password);
-        const newPatientData = { ...data, email: userInfo.email };
-        await createPatientData(newPatientData);
-        console.log("Signup successful:", response);
-        navigate("/"); // Redirect after successful signup
+        const user = getAuth().currentUser;
+        if (user) {
+          const newPatientData = {
+            ...data,
+            email: userInfo.email,
+            uid: user.uid,
+          };
+          setData(newPatientData);
+          await createPatientData(newPatientData);
+          console.log("Signup successful:", response);
+          navigate("/");
+        } else {
+          setErrors({
+            ...errors,
+            signupError:
+              "User not authenticated, cannot proceed with data save.",
+          });
+        }
       } catch (err) {
         console.log("Signup error:", err);
-        navigate("/error"); // Redirect to an error page on failure
+        if (err.code === "auth/email-already-in-use") {
+          setErrors({
+            ...errors,
+            signupError: "User with this email already exists",
+          });
+        } else if (err.code === "auth/invalid-email") {
+          setErrors({ ...errors, signupError: "Invalid email address" });
+        } else if (err.code === "auth/weak-password") {
+          setErrors({ ...errors, signupError: "Password not strong enough" });
+        } else {
+          setErrors({
+            ...errors,
+            signupError: "Something went wrong. Please try again",
+          });
+        }
       }
     }
   };
@@ -384,10 +402,15 @@ const SignUp = () => {
           </div>
         </div>
         <div>
-          <div className="shadow-2xl h-auto w-full m-auto my-auto p-4 py-6 mt-10 rounded">
+          <div className="shadow-2xl h-auto w-full m-auto my-auto p-4 py-2  rounded">
             <h2 className="text-center mt-3 mb-8 text-4xl font-bold">
               Sign Up
             </h2>
+            <div>
+              {errors.signupError && (
+                <p className="text-red-500 text-sm">{errors.signupError}</p>
+              )}
+            </div>
             <div className="px-5 mb-5">
               <ProgressBar percent={progress}>
                 {[1, 2, 3, 4].map((step, index) => (

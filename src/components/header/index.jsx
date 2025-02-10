@@ -1,16 +1,40 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaRegBell, FaRegUser } from "react-icons/fa"; // Combined imports for FaRegBell and FaRegUser
+import { FaRegBell, FaRegUser } from "react-icons/fa";
 import { useUserAuth } from "../../assets/context/userAuthContext";
+import { getPatientData } from "../../repository/post.service";
 
 const Header = () => {
-  const { clicked } = useUserAuth();
+  const { clicked, data, setData, user } = useUserAuth();
+  const [patientDetail, setPatientDetail] = useState({});
+
+  const fetchPatientDetails = useCallback(async () => {
+    if (user) {
+      try {
+        const querySnapshot = await getPatientData(user.uid);
+        if (querySnapshot.exists()) {
+          const patientData = querySnapshot.data();
+          setPatientDetail(patientData);
+        } else {
+          console.log("No patient data found");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchPatientDetails();
+  }, [fetchPatientDetails]);
 
   return (
     <div>
       <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-4">
         <div>
-          <h1 className="font-extrabold text-2xl">Welcome, User</h1>
+          <h1 className="font-extrabold text-2xl">
+            Welcome, {patientDetail.fullName}
+          </h1>
           <p className="font-medium">How may we be of help today?</p>
         </div>
         <div className="relative">

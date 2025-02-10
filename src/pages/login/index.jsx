@@ -18,7 +18,7 @@ const Login = () => {
     try {
       console.log("the user info is :", userLogInInfo);
       await login(userLogInInfo.email, userLogInInfo.password);
-      console.log(user)
+      console.log(user);
       // console.log("user", user);
       navigate("/");
     } catch (err) {
@@ -45,7 +45,7 @@ const Login = () => {
     <div className="p-4 homee">
       <h2 className="text-center font-bold text-4xl">Medmobile</h2>
       <form
-        className="flex items-center justify-center h-120 w-full px-5 sm:px-0 mt-10 "
+        className="flex items-center justify-center h-120 w-full px-5 sm:px-0 mt-8 "
         onSubmit={handleSubmit}
       >
         <div className="md:grid md:grid-cols-2 gap-2">
@@ -55,18 +55,18 @@ const Login = () => {
               className="w-full"
             />
             <div className="text-start mx-10">
-              <h3 className="font-bold text-5xl mt-8 p-2">
-                Access Your Healthcare Anytime, Anywhere
+              <h3 className="font-bold text-4xl mt-6 p-2">
+                <span >Access Your Healthcare</span> <br /> Anytime, Anywhere
               </h3>
-              <p className=" text-2xl">
+              <p className=" text-xl">
                 Enter your details to manage appointments,view prescriptions and
                 stay on top of your health.
               </p>
             </div>
           </div>
           <div className="w-full p-12  rounded-xl">
-            <div className="shadow-2xl h-full w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl ">
-              <p className="text-3xl font-bold text-center mt-20">Login</p>
+            <div className="shadow-2xl  w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl ">
+              <p className="text-3xl font-bold text-center mt-10">Login</p>
               <div>
                 <div className="mt-2">
                   <label htmlFor="Email" className="font-bold block">
@@ -115,7 +115,7 @@ const Login = () => {
                 </div>
               </div>
               <div className="mt-8">
-                <button className="cont border border-gray-900  font-bold py-3 px-4 w-full rounded-xl">
+                <button className="cont border border-gray-900  font-bold py-3 px-4 w-full mb-10 rounded-xl">
                   Continue
                 </button>
               </div>

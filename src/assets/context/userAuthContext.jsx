@@ -52,6 +52,18 @@ export const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
+  const [data, setData] = useState({
+    uid: "",
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    dob: "",
+    hospital: "",
+    hospitalNum: "",
+    emergencyContact: "",
+    emergencyContactNum: "",
+    insuranceProvider: "",
+  });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -71,6 +83,8 @@ export const UserAuthProvider = ({ children }) => {
     login,
     clicked,
     setClicked,
+    data,
+    setData,
   };
 
   return (
