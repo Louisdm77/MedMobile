@@ -41,7 +41,7 @@ export const SideBar = () => {
     {
       name: "Settings",
       icon: <IoSettingsOutline />,
-      link: "#",
+      link: "/settings",
     },
   ];
 

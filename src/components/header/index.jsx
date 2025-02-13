@@ -5,7 +5,7 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 import { getPatientData } from "../../repository/post.service";
 
 const Header = () => {
-  const { clicked, data, setData, user } = useUserAuth();
+  const { user, isLoading, setIsLoading } = useUserAuth();
   const [patientDetail, setPatientDetail] = useState({});
 
   const fetchPatientDetails = useCallback(async () => {
@@ -19,10 +19,12 @@ const Header = () => {
           console.log("No patient data found");
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching patient data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
-  }, [user]);
+  }, [user, isLoading]);
 
   useEffect(() => {
     fetchPatientDetails();
@@ -33,14 +35,14 @@ const Header = () => {
       <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-4">
         <div>
           <h1 className="font-extrabold text-2xl">
-            Welcome, {patientDetail.fullName}
+            Welcome, {patientDetail.fullName || "Patient"}
           </h1>
           <p className="font-medium">How may we be of help today?</p>
         </div>
         <div className="relative">
           <input
             type="text"
-            placeholder="Search"
+            placeholder="Search for medical records, doctors, or services"
             className="rounded-full w-full h-10 p-2 bg-gray-300"
           />
           <button className="absolute right-3 top-3 text-xl">

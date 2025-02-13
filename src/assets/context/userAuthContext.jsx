@@ -52,6 +52,7 @@ export const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
     uid: "",
     fullName: "",
@@ -63,6 +64,12 @@ export const UserAuthProvider = ({ children }) => {
     emergencyContact: "",
     emergencyContactNum: "",
     insuranceProvider: "",
+    bloodGroup: "",
+    genotype: "",
+    weight: "",
+    height: "",
+    allergies: [],
+    medicalConditions: [],
   });
 
   useEffect(() => {
@@ -85,6 +92,8 @@ export const UserAuthProvider = ({ children }) => {
     setClicked,
     data,
     setData,
+    isLoading,
+    setIsLoading,
   };
 
   return (
