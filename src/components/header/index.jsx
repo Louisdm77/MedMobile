@@ -3,39 +3,27 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { getPatientData } from "../../repository/post.service";
+import fetchPatientDetails from "../fetchPatientDetails";
 
 const Header = () => {
-  const { user, isLoading, setIsLoading } = useUserAuth();
-  const [patientDetail, setPatientDetail] = useState({});
-
-  const fetchPatientDetails = useCallback(async () => {
-    if (user) {
-      try {
-        const querySnapshot = await getPatientData(user.uid);
-        if (querySnapshot.exists()) {
-          const patientData = querySnapshot.data();
-          setPatientDetail(patientData);
-        } else {
-          console.log("No patient data found");
-        }
-      } catch (error) {
-        console.error("Error fetching patient data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  }, [user, isLoading]);
+  const { user, isLoading, setIsLoading, patientDetail, setPatientDetail } =
+    useUserAuth();
 
   useEffect(() => {
-    fetchPatientDetails();
+    if (user) {
+      fetchPatientDetails(user, setPatientDetail, setIsLoading);
+    }
   }, [fetchPatientDetails]);
+  useEffect(() => {
+    console.log("patientDetail", patientDetail);
+  }, [patientDetail]);
 
   return (
     <div>
       <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-4">
         <div>
           <h1 className="font-extrabold text-2xl">
-            Welcome, {patientDetail.fullName || "Patient"}
+            Welcome, <span className="text-lg font-bold">{patientDetail.fullName || "Patient"}</span>
           </h1>
           <p className="font-medium">How may we be of help today?</p>
         </div>

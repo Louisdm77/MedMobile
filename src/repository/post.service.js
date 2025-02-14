@@ -1,4 +1,11 @@
-import { addDoc, collection, getDoc, doc, setDoc } from "@firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "@firebase/firestore";
 import { db } from "../assets/firebaseConfig";
 
 const COLLECTION_NAME = "patientsData";
@@ -14,4 +21,12 @@ export const createPatientData = async (data) => {
 export const getPatientData = (id) => {
   const patientsDataRef = doc(collection(db, COLLECTION_NAME), id);
   return getDoc(patientsDataRef);
+};
+
+export const updatePatientDetails = async (data) => {
+  try {
+    await updateDoc(doc(db, COLLECTION_NAME, data.uid), data);
+  } catch (error) {
+    console.error(error);
+  }
 };

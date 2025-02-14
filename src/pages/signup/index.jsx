@@ -39,7 +39,7 @@ const SignUp = () => {
           setData(newPatientData);
           await createPatientData(newPatientData);
           console.log("Signup successful:", response);
-          navigate("/");
+          navigate("/settings");
         } else {
           setErrors({
             ...errors,

@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "@firebase/auth";
 const Login = () => {
   const { user, login, googleSignIn } = useUserAuth();
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
   const initialValue = {
     email: "",
     password: "",
@@ -23,7 +24,8 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       console.log("err: ", err);
-      alert(err);
+      setErrors({ ...err, credentials: "username or  password incorrect" });
+      
     }
   };
 
@@ -56,7 +58,7 @@ const Login = () => {
             />
             <div className="text-start mx-10">
               <h3 className="font-bold text-4xl mt-6 p-2">
-                <span >Access Your Healthcare</span> <br /> Anytime, Anywhere
+                <span>Access Your Healthcare</span> <br /> Anytime, Anywhere
               </h3>
               <p className=" text-xl">
                 Enter your details to manage appointments,view prescriptions and
@@ -109,9 +111,9 @@ const Login = () => {
                       });
                     }}
                   />
-                  {/* {errors.dob && (
-                  <p className="text-red-500 text-sm">{errors.dob}</p>
-                )} */}
+                  {errors.credentials && (
+                    <p className="text-red-500 text-sm">{errors.credentials}</p>
+                  )}
                 </div>
               </div>
               <div className="mt-8">
