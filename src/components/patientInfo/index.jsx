@@ -67,7 +67,7 @@ const PatientInfo = () => {
                 } else {
                   return (
                     <li key={index} className="border-b mt-2">
-                      <span className="font-bold">{info.name}</span> : &nbsp;
+                      <span className="font-bold">{info.name || "none"}</span> : &nbsp;
                       {info.value}
                     </li>
                   );

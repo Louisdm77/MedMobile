@@ -8,6 +8,7 @@ import Appointments from "./pages/appointments";
 import ProtectedRoutes from "./components/protectedRoutes";
 import Profile from "./pages/profile";
 import Settings from "./pages/settings";
+import BookAppointments from "./components/bookAppointments";
 
 const router = createBrowserRouter([
   {
@@ -33,11 +34,11 @@ const router = createBrowserRouter([
         element: <Profile />,
         errorElement: <Error />,
       },
-      // {
-      //   path: "/profile",
-      //   element: <Profile />,
-      //   errorElement: <Error />,
-      // },
+      {
+        path: "/bookappointment",
+        element: <BookAppointments />,
+        errorElement: <Error />,
+      },
     ],
   },
   {
