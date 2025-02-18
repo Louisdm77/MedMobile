@@ -8,6 +8,7 @@ import { GiCheckMark } from "react-icons/gi";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
 import { getAuth } from "@firebase/auth";
+import { fetchSignInMethodsForEmail } from "@firebase/auth";
 
 const SignUp = () => {
   const { signUp, user, data, setData } = useUserAuth();
