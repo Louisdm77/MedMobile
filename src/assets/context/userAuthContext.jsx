@@ -53,7 +53,24 @@ export const UserAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [patientDetail, setPatientDetail] = useState({});
+  const [patientDetail, setPatientDetail] = useState({
+    uid: "",
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+    dob: "",
+    hospital: "",
+    hospitalNum: "",
+    emergencyContact: "",
+    emergencyContactNum: "",
+    insuranceProvider: "",
+    bloodGroup: "",
+    genotype: "",
+    weight: "",
+    height: "",
+    allergies: [],
+    medicalConditions: [],
+  });
   const [data, setData] = useState({
     uid: "",
     fullName: "",
