@@ -28,8 +28,23 @@ const SignUp = () => {
     e.preventDefault();
     if (validateFields()) {
       try {
+        // Check if the email is already in use
+        const signInMethods = await fetchSignInMethodsForEmail(
+          getAuth(),
+          userInfo.email
+        );
+        if (signInMethods.length > 0) {
+          setErrors({
+            ...errors,
+            signupError: "User with this email already exists",
+          });
+          return; // Stop further execution
+        }
+
+        // Proceed to sign up the user
         const response = await signUp(userInfo.email, userInfo.password);
         const user = getAuth().currentUser;
+
         if (user) {
           const newPatientData = {
             ...data,
@@ -49,12 +64,7 @@ const SignUp = () => {
         }
       } catch (err) {
         console.log("Signup error:", err);
-        if (err.code === "auth/email-already-in-use") {
-          setErrors({
-            ...errors,
-            signupError: "User with this email already exists",
-          });
-        } else if (err.code === "auth/invalid-email") {
+        if (err.code === "auth/invalid-email") {
           setErrors({ ...errors, signupError: "Invalid email address" });
         } else if (err.code === "auth/weak-password") {
           setErrors({ ...errors, signupError: "Password not strong enough" });
