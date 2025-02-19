@@ -3,7 +3,7 @@ import React from "react";
 const Emergency = () => {
   return (
     <div>
-      <div className="bg-gray-300 rounded-lg  p-4 font-medium  mt-6">
+      <div className="color rounded-lg  p-3 font-medium  mt-4">
         <div className="text-start">
           <h4 className="text-start text-lg font-bold">Emergency Contact</h4>
           <p>Need urgent Care? Call your hospital now</p>

@@ -46,11 +46,11 @@ const Home = () => {
       <Layout>
         <div>
           <Header />
-          <div className="flex justify-between">
+          <div className="flex">
             <div className="w-[60%]">
               <PatientInfo />
             </div>
-            <div className="w-[40%] p-2">
+            <div className="w-[36%] p-2">
               <MyDatePicker />
               <Emergency />
             </div>

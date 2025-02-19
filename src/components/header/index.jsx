@@ -20,9 +20,9 @@ const Header = () => {
 
   return (
     <div>
-      <div className="p-6 grid grid-cols-[25%_60%_10%] gap-4 items-center mt-4">
+      <div className="p-6 grid grid-cols-[35%_50%_10%] gap-4 items-center mt-2">
         <div>
-          <h1 className="font-extrabold text-2xl">
+          <h1 className="font-extrabold text-xl">
             Welcome, <span className="text-lg font-bold">{patientDetail.fullName || "Patient"}</span>
           </h1>
           <p className="font-medium">How may we be of help today?</p>
@@ -31,17 +31,17 @@ const Header = () => {
           <input
             type="text"
             placeholder="Search for medical records, doctors, or services"
-            className="rounded-full w-full h-10 p-2 bg-gray-300"
+            className="rounded-full w-full h-10  color border-none"
           />
-          <button className="absolute right-3 top-3 text-xl">
+          <button className="absolute right-3 top-3 text-xl color">
             <IoSearchOutline />
           </button>
         </div>
         <div className="flex justify-between items-center">
-          <button className="bg-gray-300 rounded-full p-4 text-lg">
+          <button className="bg-gray-300 rounded-full p-4 text-lg color">
             <FaRegBell />
           </button>
-          <button className="bg-gray-300 rounded-full p-4 text-lg">
+          <button className="bg-gray-300 rounded-full p-4 text-lg color">
             <FaRegUser />
           </button>
         </div>

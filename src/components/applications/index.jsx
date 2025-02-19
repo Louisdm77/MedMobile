@@ -19,8 +19,8 @@ const Applications = () => {
 
   return (
     <div>
-      <div className="w-full p-6">
-        <h2 className="font-bold mb-2">Upcoming Applications</h2>
+      <div className="w-full p-4">
+        <h2 className="font-bold mb-2 text-lg">Upcoming Applications</h2>
         <Link to="/bookappointment">
           {" "}
           <button
@@ -35,7 +35,7 @@ const Applications = () => {
           {applications.map((app, index) => (
             <div
               key={index}
-              className="bg-gray-300 rounded-lg p-4 mb-2  h-35 font-medium"
+              className="color rounded-lg p-4 mb-2  h-32 font-medium"
             >
               <p>
                 <span>{app.role}</span>: <span>{app.name}</span>
@@ -51,7 +51,7 @@ const Applications = () => {
         </div>
         <div>
           <h2 className="font-bold mb-2">Application History</h2>
-          <div className="bg-gray-300 rounded-lg p-4 mb-2 h-35"></div>
+          <div className="color rounded-lg p-4 mb-2 h-25"></div>
         </div>
       </div>
     </div>

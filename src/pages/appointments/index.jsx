@@ -15,16 +15,16 @@ const Appointments = () => {
       <Layout>
         <div className="w-full ">
           <div>
-            <div className="p-6 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-4">
+            <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2">
               <div>
-                <h1 className="font-extrabold text-2xl">Appointments</h1>
+                <h1 className="font-bold text-2xl">Appointments</h1>
                 <p className="">Manage and track your medical appointments.</p>
               </div>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search"
-                  className="rounded-full w-full h-10 p-2 bg-gray-300"
+                  className="rounded-full w-full h-10 p-2 color border-none"
                 />
                 <button className="absolute right-3 top-3 text-xl">
                   <IoSearchOutline />
@@ -40,11 +40,11 @@ const Appointments = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-between">
+          <div className="flex ">
             <div className="w-[60%]">
               <Applications />
             </div>
-            <div className="w-[40%] p-2">
+            <div className="w-[37%] p-2">
               <MyDatePicker />
               <Emergency />
             </div>

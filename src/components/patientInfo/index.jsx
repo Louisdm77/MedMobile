@@ -52,22 +52,22 @@ const PatientInfo = () => {
   return (
     <div>
       <div className="w-full p-4">
-        <div className="bg-gray-300 flex items-center justify-between p-4 rounded-lg">
+        <div className="color flex items-center justify-between p-4 rounded-2xl">
           <div>
-            <h2 className="font-bold text-2xl">Patient Information</h2>
+            <h2 className="font-bold text-xl">Patient Information</h2>
             <ul className="grid grid-cols-2 gap-4 text-base font-medium p-1">
               {patientInfo.map((info, index) => {
                 if (Array.isArray(info.value)) {
                   return (
                     <li key={index} className="border-b mt-2">
-                      <span className="font-bold">{info.name}</span>: &nbsp;
+                      <span className="">{info.name}</span>: &nbsp;
                       {info.value.join(", ")}
                     </li>
                   );
                 } else {
                   return (
                     <li key={index} className="border-b mt-2">
-                      <span className="font-bold">{info.name || "none"}</span> : &nbsp;
+                      <span className="">{info.name || "none"}</span> : &nbsp;
                       {info.value}
                     </li>
                   );
@@ -80,7 +80,7 @@ const PatientInfo = () => {
           {patientRecord.map((rec, index) => {
             return (
               <Link key={index} to={rec.link}>
-                <div className="bg-gray-300 rounded-lg text-center h-40 text-3xl font-medium flex flex-col items-center justify-center">
+                <div className="color rounded-2xl text-center h-34 text-2xl font-medium flex flex-col items-center justify-center">
                   <div className="text-center">{rec.icon}</div>
                   <h3 className="mt-2">{rec.name}</h3>
                 </div>
