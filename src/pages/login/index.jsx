@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "@firebase/auth";
+import { FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const { user, login, googleSignIn } = useUserAuth();
@@ -12,6 +14,8 @@ const Login = () => {
     email: "",
     password: "",
   };
+
+  const [viewPassword, setViewPassword] = useState(false);
 
   const [userLogInInfo, setUserLogInInfo] = useState(initialValue);
   const handleSubmit = async (e) => {
@@ -24,8 +28,7 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       console.log("err: ", err);
-      setErrors({ ...err, credentials: "username or  password incorrect" });
-      
+      setErrors({ ...err, credentials: "something went wrong" });
     }
   };
 
@@ -93,24 +96,48 @@ const Login = () => {
                   <p className="text-red-500 text-sm">{errors.dob}</p>
                 )} */}
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 ">
                   <label htmlFor="Email" className="font-bold block">
                     Password
                   </label>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="********"
-                    required
-                    value={userLogInInfo.password}
-                    className="box rounded-lg w-full p-3 bg-none "
-                    onChange={(e) => {
-                      setUserLogInInfo({
-                        ...userLogInInfo,
-                        password: e.target.value,
-                      });
-                    }}
-                  />
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={viewPassword ? "text" : "password"}
+                      placeholder="********"
+                      required
+                      value={userLogInInfo.password}
+                      className="box rounded-lg w-full p-3 bg-none relative"
+                      onChange={(e) => {
+                        setUserLogInInfo({
+                          ...userLogInInfo,
+                          password: e.target.value,
+                        });
+                      }}
+                    />
+                    <div className="text-2xl absolute right-2 bottom-4 flex">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setViewPassword(!viewPassword);
+                        }}
+                        className={`${!viewPassword ? "block" : "hidden"}`}
+                      >
+                        <FaRegEye />
+                      </button>
+                      <button
+                        type="button"
+                        className={`${viewPassword ? "block" : "hidden"}`}
+                        onClick={() => {
+                          setViewPassword(!viewPassword);
+                        }}
+                      >
+                        {" "}
+                        <FaRegEyeSlash />
+                      </button>
+                    </div>
+                  </div>
+
                   {errors.credentials && (
                     <p className="text-red-500 text-sm">{errors.credentials}</p>
                   )}
@@ -126,10 +153,10 @@ const Login = () => {
             <div className="mt-4 flex items-center w-full text-center">
               <Link
                 to="/signup"
-                className="text-lg font-medium capitalize text-center w-full"
+                className="text-lg  capitalize text-center w-full"
               >
                 Don&apos;t have any account yet?
-                <span className="text-blue-700"> Sign Up</span>
+                <span className="text-blue-700 underline font-bold"> Sign Up</span>
               </Link>
             </div>
           </div>

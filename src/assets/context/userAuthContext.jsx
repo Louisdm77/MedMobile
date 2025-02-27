@@ -71,6 +71,8 @@ export const UserAuthProvider = ({ children }) => {
     allergies: [],
     medicalConditions: [],
   });
+  const [otp, setOtp] = useState("");
+  const [otpCode, setOtpCode] = useState("");
   const [data, setData] = useState({
     uid: "",
     fullName: "",
@@ -114,6 +116,10 @@ export const UserAuthProvider = ({ children }) => {
     setIsLoading,
     patientDetail,
     setPatientDetail,
+    otp,
+    setOtp,
+    otpCode,
+    setOtpCode,
   };
 
   return (

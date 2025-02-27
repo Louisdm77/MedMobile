@@ -9,6 +9,8 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
 import { getAuth } from "@firebase/auth";
 import { fetchSignInMethodsForEmail } from "@firebase/auth";
+import { FaRegEye } from "react-icons/fa";
+import { FaRegEyeSlash } from "react-icons/fa";
 
 const SignUp = () => {
   const { signUp, user, data, setData } = useUserAuth();
@@ -19,8 +21,11 @@ const SignUp = () => {
   const initialValue = {
     email: "",
     password: "",
-    confirmPassword: "",
+    // confirmPassword: "",
   };
+
+  const [viewPassword, setViewPassword] = useState(false);
+  // const [viewConfirmPassword, setViewConfirmPassword] = useState(false);
   const [userInfo, setUserInfo] = useState(initialValue);
 
   const [dataList, setDataList] = useState([]);
@@ -98,8 +103,8 @@ const SignUp = () => {
     } else if (signupPage === 4) {
       if (userInfo.password.length < 6)
         newErrors.password = "Password not strong enough";
-      if (userInfo.confirmPassword !== userInfo.password)
-        newErrors.confirmPassword = "Passwords don't match";
+      // if (userInfo.confirmPassword !== userInfo.password)
+      //   newErrors.confirmPassword = "Passwords don't match";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -132,33 +137,6 @@ const SignUp = () => {
       case 1:
         return (
           <div>
-            <div className="grid">
-              <label htmlFor="phone-select" className="font-bold">
-                Phone Number
-              </label>
-              <div className="flex justify-between items-center">
-                <select
-                  name="phone"
-                  id="phone-select"
-                  className="box rounded-lg w-[26%] font-bold p-3 text-md"
-                >
-                  <option value="+234">+234</option>
-                </select>
-                <input
-                  id="phone"
-                  type="number"
-                  placeholder="0812345678"
-                  className="box rounded-lg w-[73%] p-3 text-md"
-                  value={data.phoneNumber}
-                  onChange={(e) =>
-                    setData({ ...data, phoneNumber: e.target.value })
-                  }
-                />
-              </div>
-              {errors.phoneNumber && (
-                <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
-              )}
-            </div>
             <div className="grid mt-2">
               <label htmlFor="name" className="font-bold">
                 Full Name
@@ -196,6 +174,34 @@ const SignUp = () => {
                 <p className="text-red-500 text-sm">{errors.email}</p>
               )}
             </div>
+            <div className="grid">
+              <label htmlFor="phone-select" className="font-bold">
+                Phone Number
+              </label>
+              <div className="flex justify-between items-center">
+                <select
+                  name="phone"
+                  id="phone-select"
+                  className="box rounded-lg w-[26%] font-bold p-3 text-md"
+                >
+                  <option value="+234">+234</option>
+                </select>
+                <input
+                  id="phone"
+                  type="number"
+                  placeholder="0812345678"
+                  className="box rounded-lg w-[73%] p-3 text-md"
+                  value={data.phoneNumber}
+                  onChange={(e) =>
+                    setData({ ...data, phoneNumber: e.target.value })
+                  }
+                />
+              </div>
+              {errors.phoneNumber && (
+                <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+              )}
+            </div>
+
             <button
               type="button"
               className="cont box w-full rounded text-center border border-2 border-black mt-4 p-2"
@@ -351,38 +357,87 @@ const SignUp = () => {
               <label htmlFor="password" className="font-bold">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                placeholder="******"
-                value={userInfo.password}
-                className="box rounded-lg w-full p-3"
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, password: e.target.value })
-                }
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  type={viewPassword ? "text" : "password"}
+                  placeholder="******"
+                  value={userInfo.password}
+                  className="box rounded-lg w-full p-3 relative"
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, password: e.target.value })
+                  }
+                />{" "}
+                <div className="text-2xl absolute right-2 bottom-4 flex">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setViewPassword(!viewPassword);
+                    }}
+                    className={`${!viewPassword ? "block" : "hidden"}`}
+                  >
+                    <FaRegEye />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${viewPassword ? "block" : "hidden"}`}
+                    onClick={() => {
+                      setViewPassword(!viewPassword);
+                    }}
+                  >
+                    {" "}
+                    <FaRegEyeSlash />
+                  </button>
+                </div>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-sm">{errors.password}</p>
               )}
             </div>
-            <div className="grid mt-2">
+            {/* <div className="grid mt-2">
               <label htmlFor="confirmPassword" className="font-bold">
                 Confirm Password
               </label>
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="......"
-                className="box rounded-lg w-full p-3"
-                value={userInfo.confirmPassword}
-                onChange={(e) =>
-                  setUserInfo({ ...userInfo, confirmPassword: e.target.value })
-                }
-              />
+              <div className="relative">
+                <input
+                  id="confirmPassword"
+                  type={viewConfirmPassword ? "text" : "password"}
+                  placeholder="******"
+                  className="box rounded-lg w-full p-3"
+                  value={userInfo.confirmPassword}
+                  onChange={(e) =>
+                    setUserInfo({
+                      ...userInfo,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                />
+                <div className="text-2xl absolute right-2 bottom-4 flex">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setViewPassword(!viewConfirmPassword);
+                    }}
+                    className={`${!viewConfirmPassword ? "block" : "hidden"}`}
+                  >
+                    <FaRegEye />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${viewPassword ? "block" : "hidden"}`}
+                    onClick={() => {
+                      setViewPassword(!viewConfirmPassword);
+                    }}
+                  >
+                    {" "}
+                    <FaRegEyeSlash />
+                  </button>
+                </div>
+              </div>
               {errors.confirmPassword && (
                 <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
               )}
-            </div>
+            </div> */}
             <button
               type="button"
               className="cont w-full rounded text-center bg-white border border-2 border-black mt-8 p-2"
@@ -461,9 +516,9 @@ const SignUp = () => {
             </div>
           </div>
           <div>
-            <h2 className="text-center mt-4 font-medium">
+            <h2 className="text-center mt-4 ">
               Already have an account?{" "}
-              <Link to="/login" className="text-blue-800 underline">
+              <Link to="/login" className="text-blue-800 underline font-bold">
                 log in
               </Link>
             </h2>

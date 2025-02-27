@@ -56,8 +56,8 @@ export const SideBar = () => {
                 key={index}
                 className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "
                 style={{
-                  backgroundColor: clicked === nav.name ? "#837B7B" : "",
-                  color: clicked === nav.name ? "white" : "black",
+                  backgroundColor: clicked === nav.name ? "white" : "",
+                
                 }}
                 onClick={() => {
                   setClicked(nav.name);
@@ -70,7 +70,7 @@ export const SideBar = () => {
           ))}
 
           <div className=" ">
-            <Link to="/login" onClick={logOut}>
+            <Link to="/login" >
               <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 ">
                 <span className="mr-4 font-bold text-xl ">
                   <IoIosHelpCircleOutline />

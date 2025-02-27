@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <aside className="w-[25%] h-auto">
         <SideBar />
       </aside>
-      <div className="w-full">{children}</div>
+      <div className="w-full child">{children}</div>
     </div>
   );
 };

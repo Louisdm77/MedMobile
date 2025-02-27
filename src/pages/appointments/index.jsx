@@ -26,15 +26,15 @@ const Appointments = () => {
                   placeholder="Search"
                   className="rounded-full w-full h-10 p-2 color border-none"
                 />
-                <button className="absolute right-3 top-3 text-xl">
+                <button className="absolute right-3 top-3 text-xl ">
                   <IoSearchOutline />
                 </button>
               </div>
               <div className="flex justify-between items-center">
-                <button className="bg-gray-300 rounded-full p-4 text-lg">
+                <button className="bg-gray-300 rounded-full p-4 text-lg color">
                   <FaRegBell />
                 </button>
-                <button className="bg-gray-300 rounded-full p-4 text-lg">
+                <button className="bg-gray-300 rounded-full p-4 text-lg color">
                   <FaRegUser />
                 </button>
               </div>

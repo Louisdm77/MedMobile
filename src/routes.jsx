@@ -9,6 +9,7 @@ import ProtectedRoutes from "./components/protectedRoutes";
 import Profile from "./pages/profile";
 import Settings from "./pages/settings";
 import BookAppointments from "./components/bookAppointments";
+import OtpInputt from "./components/otpInput";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
         element: <Appointments />,
         errorElement: <Error />,
       },
-      {
+      { 
         path: "/settings",
         element: <Settings />,
         errorElement: <Error />,
@@ -39,11 +40,17 @@ const router = createBrowserRouter([
         element: <BookAppointments />,
         errorElement: <Error />,
       },
+
     ],
   },
   {
     path: "/login",
     element: <Login />,
+    errorElement: <Error />,
+  },
+  {
+    path: "/emailverify",
+    element: <OtpInputt />,
     errorElement: <Error />,
   },
   {
