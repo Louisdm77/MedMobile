@@ -8,7 +8,7 @@ const MyDatePicker = () => {
   const { clicked } = useUserAuth();
 
   return (
-    <div className="relative w-full h-auto flex flex-col rounded-lg color ">
+    <div className="relative w-full h-auto flex flex-col rounded-lg bg-white  ">
       <div className="w-full flex justify-center w-full">
         {" "}
         {/* Added this wrapper div */}
@@ -25,7 +25,7 @@ const MyDatePicker = () => {
         </button>
       )}
       {clicked === "Appointments" && (
-        <button className="m-2 border border-2 border-blue-700  rounded-lg p-2">
+        <button className="m-2 border border-2 border-blue-700  rounded-lg p-2 homee ">
           Book New Appointment
         </button>
       )}

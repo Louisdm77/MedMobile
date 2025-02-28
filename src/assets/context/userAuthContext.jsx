@@ -70,6 +70,7 @@ export const UserAuthProvider = ({ children }) => {
     height: "",
     allergies: [],
     medicalConditions: [],
+    address: "",
   });
   const [otp, setOtp] = useState("");
   const [otpCode, setOtpCode] = useState("");
@@ -90,6 +91,7 @@ export const UserAuthProvider = ({ children }) => {
     height: "",
     allergies: [],
     medicalConditions: [],
+    address: "",
   });
 
   useEffect(() => {

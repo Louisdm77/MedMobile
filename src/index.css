@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 :root {
   font-family: "Inter", serif;
   font-optical-sizing: auto;
@@ -12,6 +21,9 @@ body {
   color: #1f487e;
 }
 
+.bod{
+  border: 2px solid #295a99;
+}
 .child {
   background-color: #f9f9f9;
 }
@@ -40,4 +52,9 @@ body {
 
 input {
   outline: none;
+}
+
+
+.line{
+  line-height: 30px;
 }

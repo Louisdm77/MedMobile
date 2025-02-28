@@ -52,7 +52,7 @@ const PatientInfo = () => {
   return (
     <div>
       <div className="w-full p-4">
-        <div className="color flex items-center justify-between p-4 rounded-2xl">
+        <div className="bg-white  flex items-center justify-between p-4 rounded-2xl">
           <div>
             <h2 className="font-bold text-xl">Patient Information</h2>
             <ul className="grid grid-cols-2 gap-4 text-base font-medium p-1">
@@ -80,7 +80,7 @@ const PatientInfo = () => {
           {patientRecord.map((rec, index) => {
             return (
               <Link key={index} to={rec.link}>
-                <div className="color rounded-2xl text-center h-34 text-2xl font-medium flex flex-col items-center justify-center">
+                <div className="bg-white  rounded-2xl text-center h-34 text-2xl font-medium flex flex-col items-center justify-center">
                   <div className="text-center">{rec.icon}</div>
                   <h3 className="mt-2">{rec.name}</h3>
                 </div>
