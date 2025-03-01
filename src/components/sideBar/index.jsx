@@ -31,7 +31,7 @@ export const SideBar = () => {
     {
       name: "Chat",
       icon: <IoChatbubbleOutline />,
-      link: "#",
+      link: "/chat",
     },
     {
       name: "Feedback",

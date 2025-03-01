@@ -54,7 +54,7 @@ const PatientInfo = () => {
       <div className="w-full p-4">
         <div className="bg-white  flex items-center justify-between p-4 rounded-2xl">
           <div>
-            <h2 className="font-bold text-xl">Patient Information</h2>
+            <h2 className="font-bold text-xl">My Information</h2>
             <ul className="grid grid-cols-2 gap-4 text-base font-medium p-1">
               {patientInfo.map((info, index) => {
                 if (Array.isArray(info.value)) {

@@ -5,10 +5,15 @@ import {
   doc,
   setDoc,
   updateDoc,
+  orderBy,
+  onSnapshot,
+  QuerySnapshot,
+  query,
 } from "@firebase/firestore";
 import { db } from "../assets/firebaseConfig";
 
 const COLLECTION_NAME = "patientsData";
+const MESSAGE_COLLECTION = 'messages'
 export const createPatientData = async (data) => {
   try {
     await setDoc(doc(db, COLLECTION_NAME, data.uid), data);

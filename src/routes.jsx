@@ -10,6 +10,7 @@ import Profile from "./pages/profile";
 import Settings from "./pages/settings";
 import BookAppointments from "./components/bookAppointments";
 import OtpInputt from "./components/otpInput";
+import Chat from "./pages/chat";
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
         element: <Appointments />,
         errorElement: <Error />,
       },
-      { 
+      {
         path: "/settings",
         element: <Settings />,
         errorElement: <Error />,
@@ -35,12 +36,12 @@ const router = createBrowserRouter([
         element: <Profile />,
         errorElement: <Error />,
       },
+      { path: "/chat", element: <Chat />, errorElement: <Error /> },
       {
         path: "/bookappointment",
         element: <BookAppointments />,
         errorElement: <Error />,
       },
-
     ],
   },
   {
