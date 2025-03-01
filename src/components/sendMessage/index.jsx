@@ -57,7 +57,7 @@ const SendMessage = () => {
       <div>
         {messages.map((msg) => (
           <div key={msg.id} >
-            <p className="bg-white rounded-full mt-2 p-2 ">{msg.data.text}</p>
+            <p className="bg-white rounded-full mt-2 p-2 font-bold">{msg.data.text}</p>
             <p classsName="text-sm">{msg.data.createdAt.toDate().toLocaleString()}</p>
           </div>
         ))}
