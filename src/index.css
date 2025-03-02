@@ -67,3 +67,6 @@ input {
 .line {
   line-height: 30px;
 }
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}

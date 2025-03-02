@@ -49,9 +49,9 @@ const SendMessage = () => {
   };
 
   return (
-    <div className="relative h-full">
+    <div className="relative h-full ">
       <MessangerInfo />
-      <div className="overflow-y-auto h-[55vh]">
+      <div className="overflow-y-auto h-[55vh] hide-scrollbar">
         {messages.map((msg) => (
           <div
             key={msg.id}
