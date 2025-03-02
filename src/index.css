@@ -30,7 +30,12 @@ body {
 .homee {
   color: #1f487e;
 }
-
+.msg{
+  width: fit-content;
+}
+/* .text{
+  font-size: 12px;
+} */
 .view {
   background-color: #1f487e;
 }

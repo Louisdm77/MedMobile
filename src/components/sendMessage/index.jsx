@@ -4,7 +4,6 @@ import {
   addDoc,
   collection,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
 } from "@firebase/firestore";
@@ -26,10 +25,8 @@ const SendMessage = () => {
         data: doc.data(),
       }));
       setMessages(messagesData);
-      console.log(messagesData);
     });
 
-    // Clean up the listener on component unmount
     return () => unsubscribe();
   }, []);
 
@@ -48,17 +45,35 @@ const SendMessage = () => {
       uid,
     });
     setNewMessage("");
-    console.log(messages); // Clear the input field after sending the message
   };
 
   return (
-    <div>
+    <div className="relative h-full">
       <MessangerInfo />
-      <div>
+      <div className="overflow-y-auto h-[70vh]">
         {messages.map((msg) => (
-          <div key={msg.id} >
-            <p className="bg-white rounded-full mt-2 p-2 font-bold">{msg.data.text}</p>
-            <p classsName="text-sm">{msg.data.createdAt.toDate().toLocaleString()}</p>
+          <div
+            key={msg.id}
+            className={`mt-2 ${
+              msg.data.uid === uid ? "flex justify-end" : "flex justify-start"
+            }`}
+          >
+            <div
+              className={`bg-white rounded-lg px-4 py-2 msg max-w-[70%] ${
+                msg.data.uid === uid ? "ml-2" : "mr-2"
+              }`}
+            >
+              <p className="text-sm">{msg.data.text}</p>
+              <p className="text-xs font-light self-end mt-1">
+                {msg.data.createdAt
+                  ? msg.data.createdAt.toDate().toLocaleTimeString(undefined, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    })
+                  : "`"}
+              </p>
+            </div>
           </div>
         ))}
       </div>
@@ -83,10 +98,7 @@ const SendMessage = () => {
             onChange={(e) => setNewMessage(e.target.value)}
           />
         </div>
-        <button
-          type="submit" // Use type="submit" to trigger form submission
-          className="text-2xl text-white"
-        >
+        <button type="submit" className="text-2xl text-white">
           <MdSend />
         </button>
       </form>
