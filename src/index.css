@@ -21,7 +21,7 @@ body {
   color: #1f487e;
 }
 
-.bod{
+.bod {
   border: 2px solid #295a99;
 }
 .child {
@@ -30,7 +30,7 @@ body {
 .homee {
   color: #1f487e;
 }
-.msg{
+.msg {
   width: fit-content;
 }
 /* .text{
@@ -39,6 +39,11 @@ body {
 .view {
   background-color: #1f487e;
 }
+
+.viewi {
+  background-color: #365781;
+}
+
 .color {
   background-color: #d9d9d9;
 }
@@ -59,7 +64,6 @@ input {
   outline: none;
 }
 
-
-.line{
+.line {
   line-height: 30px;
 }

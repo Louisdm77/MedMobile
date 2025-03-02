@@ -6,6 +6,7 @@ import {
   onSnapshot,
   query,
   serverTimestamp,
+  orderBy,
 } from "@firebase/firestore";
 import { MdSend } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -18,7 +19,7 @@ const SendMessage = () => {
   const { uid, displayName, photoURL } = auth.currentUser;
 
   useEffect(() => {
-    const q = query(collection(db, "messages"));
+    const q = query(collection(db, "messages"), orderBy("createdAt"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const messagesData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -50,7 +51,7 @@ const SendMessage = () => {
   return (
     <div className="relative h-full">
       <MessangerInfo />
-      <div className="overflow-y-auto h-[70vh]">
+      <div className="overflow-y-auto h-[55vh]">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -59,9 +60,9 @@ const SendMessage = () => {
             }`}
           >
             <div
-              className={`bg-white rounded-lg px-4 py-2 msg max-w-[70%] ${
+              className={`text-white rounded-lg px-4 py-2 msg max-w-[70%] ${
                 msg.data.uid === uid ? "ml-2" : "mr-2"
-              }`}
+              } ${msg.data.uid === uid ? "view" : "viewi"} `}
             >
               <p className="text-sm">{msg.data.text}</p>
               <p className="text-xs font-light self-end mt-1">
