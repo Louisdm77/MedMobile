@@ -37,11 +37,15 @@ body {
   font-size: 12px;
 } */
 .view {
-  background-color: #1f487e;
+  background-color: #1F487E
 }
 
 .viewi {
-  background-color: #365781;
+  background-color: #313B72
+}
+
+.viewii {
+  color: #313B72
 }
 
 .color {
@@ -69,4 +73,7 @@ input {
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Hide scrollbar */
+}
+.round{
+  border-radius: 10px;
 }

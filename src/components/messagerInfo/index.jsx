@@ -6,8 +6,8 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 const MessangerInfo = () => {
   const { user, patientDetail } = useUserAuth();
   return (
-    <div className="grid grid-cols-[7%_80%_5%] view p-4 gap-6 text-white">
-      <div className="text-4xl flex justify-center   ">
+    <div className="grid grid-cols-[7%_80%_5%] view p-4 gap-6 text-white rounded-xl ">
+      <div className="text-4xl flex justify-center ">
         <LiaUser className="bg-gray-200 rounded-full" />
       </div>
       <div className="block">

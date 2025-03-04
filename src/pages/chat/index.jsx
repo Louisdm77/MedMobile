@@ -10,7 +10,7 @@ const Chat = () => {
     <Layout>
       <div className="w-full ">
         <div>
-          <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2 relative">
+          <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2 relative ">
             <div>
               <h1 className="font-bold text-2xl">Chats</h1>
               <p className="text-lg">Connect with Medical Personels.</p>
@@ -37,7 +37,7 @@ const Chat = () => {
           <div className="grid grid-cols-2 p-2">
             <div></div>
 
-            <div className="w-full h-[82vh] p-2 relative bg-gray-300">
+            <div className="w-full h-[82vh] relative shadow-2xl">
               <SendMessage />
             </div>
           </div>
