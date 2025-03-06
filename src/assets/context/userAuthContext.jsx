@@ -94,6 +94,14 @@ export const UserAuthProvider = ({ children }) => {
     address: "",
   });
 
+  const [clickedUser, setClickedUser] = useState({
+    userId: "",
+    name: "",
+    profession: "Patient",
+    conversation: "",
+    email: "",
+  });
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Set user to the current user object
@@ -122,6 +130,8 @@ export const UserAuthProvider = ({ children }) => {
     setOtp,
     otpCode,
     setOtpCode,
+    clickedUser,
+    setClickedUser,
   };
 
   return (

@@ -3,9 +3,11 @@ import Layout from "../../components/layout";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 import SendMessage from "../../components/sendMessage";
-import MessangerInfo from "../../components/messagerInfo";
+import Admins from "../../components/admins";
+import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Chat = () => {
+  const { clickedUser } = useUserAuth();
   return (
     <Layout>
       <div className="w-full ">
@@ -35,10 +37,15 @@ const Chat = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 p-2">
-            <div></div>
+            <div>
+              <Admins />
+            </div>
 
             <div className="w-full h-[82vh] relative shadow-2xl">
-              <SendMessage />
+              <SendMessage
+                otherUserId={clickedUser.userId}
+                otherUserName={clickedUser.name}
+              />
             </div>
           </div>
         </div>

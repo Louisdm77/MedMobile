@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { auth, db } from "../../assets/firebaseConfig";
 import {
   addDoc,
@@ -12,27 +12,41 @@ import { MdSend } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import MessangerInfo from "../messagerInfo";
 import { MdPlayArrow } from "react-icons/md";
+import { useUserAuth } from "../../assets/context/userAuthContext";
 
-const SendMessage = () => {
+const SendMessage = ({ otherUserId, otherUserName }) => {
+  const { patientDetail } = useUserAuth();
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  const { uid, displayName, photoURL } = auth.currentUser;
-  const msgEnd = useRef(null)
+  const { uid, displayName, photoURL } = auth.currentUser || {}; // Ensure safe destructuring
+  const msgEnd = useRef(null);
+
+  const conversationId =
+    uid && otherUserId
+      ? uid > otherUserId
+        ? `${otherUserId}_${uid}`
+        : `${uid}_${otherUserId}`
+      : "";
 
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("createdAt"));
+    if (!conversationId) return; // Prevent querying if conversationId is not set
+
+    const q = query(
+      collection(db, "conversations", conversationId, "messages"),
+      orderBy("createdAt")
+    );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const messagesData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         data: doc.data(),
       }));
       setMessages(messagesData);
-      msgEnd.current.scrollIntoView({behavior:'smooth'})
+      msgEnd.current.scrollIntoView({ behavior: "smooth" });
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [conversationId]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -41,30 +55,49 @@ const SendMessage = () => {
       return;
     }
 
-    await addDoc(collection(db, "messages"), {
+    if (!uid || !patientDetail) {
+      alert("User not authenticated or patient details missing");
+      return;
+    }
+
+    const messageData = {
       text: newMessage,
-      name: displayName,
-      photo: photoURL,
+      user: {
+        uid: uid,
+        name: patientDetail.fullName, // Ensure this is available
+        photo: photoURL, // Optional: include if you want to display user photo
+      },
+      otherUser: {
+        id: otherUserId,
+        name: otherUserName,
+        // photo: otherUserPhoto, // If you have this available
+      },
       createdAt: serverTimestamp(),
-      uid,
-    });
+    };
+
+    await addDoc(
+      collection(db, "conversations", conversationId, "messages"),
+      messageData
+    );
     setNewMessage("");
   };
 
   return (
-    <div className="relative h-full ">
+    <div className="relative h-full">
       <MessangerInfo />
       <div className="overflow-y-auto h-[55vh] hide-scrollbar p-4">
         {messages.map((msg) => (
           <div
             key={msg.id}
             className={`mt-2 ${
-              msg.data.uid === uid ? "flex justify-end" : "flex justify-start"
+              msg.data.user.uid === uid
+                ? "flex justify-end"
+                : "flex justify-start"
             } relative`}
           >
             <div
               className={`text-white rounded-lg px-4 py-2 msg max-w-[70%] ${
-                msg.data.uid === uid ? "ml-2 view" : "mr-2 viewi"
+                msg.data.user.uid === uid ? "ml-2 view" : "mr-2 viewi"
               }`}
             >
               <p className="text-sm">{msg.data.text}</p>
@@ -78,8 +111,8 @@ const SendMessage = () => {
                   : "`"}
               </p>
               <div
-                className={`absolute text-3xl   ${
-                  msg.data.uid === uid
+                className={`absolute text-3xl ${
+                  msg.data.user.uid === uid
                     ? "right-[-14px] rotate-80 top-[-10px] homee"
                     : "left-[-14px] rotate-220 viewii top-[-10px]"
                 }`}
@@ -88,7 +121,6 @@ const SendMessage = () => {
               </div>
             </div>
           </div>
-
         ))}
         <div ref={msgEnd} />
       </div>
