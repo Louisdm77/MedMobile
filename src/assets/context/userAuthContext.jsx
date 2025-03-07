@@ -101,6 +101,8 @@ export const UserAuthProvider = ({ children }) => {
     conversation: "",
     email: "",
   });
+  const [messages, setMessages] = useState([]);
+  const [lastMsg, setLastMsg] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -132,6 +134,10 @@ export const UserAuthProvider = ({ children }) => {
     setOtpCode,
     clickedUser,
     setClickedUser,
+    messages,
+    setMessages,
+    lastMsg,
+    setLastMsg,
   };
 
   return (

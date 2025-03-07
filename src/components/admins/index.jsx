@@ -6,7 +6,7 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = () => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser } = useUserAuth();
+  const { setClickedUser, messages, lastMsg } = useUserAuth();
 
   useEffect(() => {
     const userListRef = collection(db, "patientsData");
@@ -34,19 +34,20 @@ const Admins = () => {
   }, []);
 
   return (
-    <div>
+    <div className="h-[80vh] overflow-y-scroll hide-scrollbar">
       <ul>
         {users.length === 0 ? (
           <li>No users found</li>
         ) : (
           users.map((user) => (
             <li
-              className="flex justify-between items-center p-3 mt-2"
+              className="flex justify-between items-center p-3 mt-2 shadow-md rounded-lg"
               key={user.id}
             >
               <div className="flex justify-center">
-                <LiaUser className="bg-gray-200 rounded-full text-4xl" />
+                <LiaUser className="bg-gray-200 text-white rounded-full text-4xl mr-3" />
                 <div
+                  className="text-black font-bold"
                   onClick={() => {
                     setClickedUser({
                       userId: user.id,
@@ -56,7 +57,8 @@ const Admins = () => {
                     console.log("Clicked User:", user); // Log the clicked user
                   }}
                 >
-                  {user.fullName ? user.fullName : "User"}
+                  <span>{user.fullName ? user.fullName : "User"}</span>
+                  <span>{lastMsg.lastMsg}</span>
                 </div>
               </div>
             </li>
