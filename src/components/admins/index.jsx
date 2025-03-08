@@ -35,20 +35,16 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
     };
   }, []);
 
-  // Fetch last messages based on conversationId
   useEffect(() => {
-    // if (!conversationId) return; // Don't run if conversationId is not available
-
-    const q = query(collection(db, "last_msgs", conversationId));
     const unsubscribe = onSnapshot(
-      q,
-      (querySnapshot) => {
-        const last_messages = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
+      collection(db, "last_msgs"), // Correct: Fetch the entire collection
+      (snapshot) => {
+        const lastMessages = snapshot.docs.map((doc) => ({
+          conversationId: doc.id, // Document ID is the conversationId
+          ...doc.data(),
         }));
-        setLasts(last_messages);
-        console.log("Lasts:", lasts);
+        setLasts(lastMessages);
+        console.log("Last Messages:", lastMessages);
       },
       (error) => {
         console.error("Error fetching last messages:", error);
@@ -57,9 +53,9 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
 
     return () => {
       console.log("Unsubscribing from last messages updates");
-      unsubscribe(); // Clean up the subscription
+      unsubscribe();
     };
-  }, [conversationId]); // Add conversationId to dependency array
+  }, []); // Add conversationId to dependency array
 
   const getLastMsgs = (id) => {
     if (!patientDetail.uid || !id) return "No messages yet"; // Guard against missing patientDetail.uid/id
