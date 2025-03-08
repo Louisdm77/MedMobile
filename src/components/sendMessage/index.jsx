@@ -7,6 +7,8 @@ import {
   query,
   serverTimestamp,
   orderBy,
+  setDoc,
+  doc,
 } from "@firebase/firestore";
 import { MdSend } from "react-icons/md";
 import { IoMdAddCircleOutline } from "react-icons/io";
@@ -19,7 +21,7 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
     useUserAuth();
   const [newMessage, setNewMessage] = useState("");
 
-  const { uid, displayName, photoURL } = auth.currentUser || {}; // Ensure safe destructuring
+  const { uid, displayName, photoURL } = auth.currentUser || {};
   const msgEnd = useRef(null);
 
   const conversationId =
@@ -30,12 +32,14 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
       : "";
 
   useEffect(() => {
-    if (!conversationId) return; // Prevent querying if conversationId is not set
+    console.log("Last Message Updated:", lastMsg);
+    if (!conversationId) return;
 
     const q = query(
       collection(db, "conversations", conversationId, "messages"),
       orderBy("createdAt")
     );
+
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const messagesData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -64,24 +68,42 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
       text: newMessage,
       user: {
         uid: uid,
-        name: patientDetail.fullName, // Ensure this is available
-        photo: photoURL, // Optional: include if you want to display user photo
+        name: patientDetail.fullName,
+        photo: photoURL,
       },
       otherUser: {
         id: otherUserId,
         name: otherUserName,
-        // photo: otherUserPhoto, // If you have this available
       },
       createdAt: serverTimestamp(),
     };
 
+    // Add the new message to Firestore
     await addDoc(
       collection(db, "conversations", conversationId, "messages"),
       messageData
     );
-    setNewMessage("");
-    setLastMsg((prev) => [...prev, { uid: uid, lastMsg: newMessage }]);
-    console.log("Last Message Updated:", lastMsg);
+
+  
+    const lastMessage = {
+      conversationId: conversationId,
+      message: {
+        text: newMessage,
+        createdAt: messageData.createdAt,
+      },
+    };
+
+    // Save last message to Firestore
+    await setDoc(doc(db, "last_msgs", conversationId), lastMessage);
+
+    setLastMsg((prev) => {
+      const updatedMessages = prev.filter(
+        (msg) => msg.conversationId !== conversationId
+      );
+      return [...updatedMessages, lastMessage];
+    });
+
+    setNewMessage(""); // Clear input after sending
   };
 
   return (
@@ -128,7 +150,7 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
       </div>
       <form
         className="absolute bottom-0 left-0 right-0 p-4 flex items-center view rounded-xl"
-        onSubmit={sendMessage}
+        onSubmit={sendMessage} // Call sendMessage on form submit
       >
         <button type="button" className="text-white text-2xl">
           <IoMdAddCircleOutline />

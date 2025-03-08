@@ -7,15 +7,27 @@ import Admins from "../../components/admins";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Chat = () => {
-  const { clickedUser } = useUserAuth();
+  const { clickedUser, patientDetail } = useUserAuth();
+
+  // Ensure patientDetail is defined before accessing uid
+  const uid = patientDetail ? patientDetail.uid : null;
+
+  // Construct conversationId only if uid and clickedUser.userId are defined
+  const conversationId =
+    uid && clickedUser && clickedUser.userId
+      ? uid > clickedUser.userId
+        ? `${clickedUser.userId}_${uid}`
+        : `${uid}_${clickedUser.userId}`
+      : "";
+
   return (
     <Layout>
-      <div className="w-full ">
+      <div className="w-full">
         <div>
-          <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2 relative ">
+          <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2 relative">
             <div>
               <h1 className="font-bold text-2xl">Chats</h1>
-              <p className="text-lg">Connect with Medical Personels.</p>
+              <p className="text-lg">Connect with Medical Personnel.</p>
             </div>
             <div className="relative">
               <input
@@ -23,7 +35,7 @@ const Chat = () => {
                 placeholder="Search"
                 className="rounded-full w-full h-10 p-2 color border-none"
               />
-              <button className="absolute right-3 top-3 text-xl ">
+              <button className="absolute right-3 top-3 text-xl">
                 <IoSearchOutline />
               </button>
             </div>
@@ -38,11 +50,16 @@ const Chat = () => {
           </div>
           <div className="grid grid-cols-2 p-2">
             <div className="p-2">
-              <Admins />
+              <Admins
+                otherUserId={clickedUser.userId}
+                otherUserName={clickedUser.name}
+                conversationId={conversationId}
+              />
             </div>
 
             <div className="w-full h-[82vh] relative shadow-2xl">
               <SendMessage
+                conversationId={conversationId}
                 otherUserId={clickedUser.userId}
                 otherUserName={clickedUser.name}
               />
