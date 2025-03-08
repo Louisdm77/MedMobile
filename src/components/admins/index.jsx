@@ -6,7 +6,7 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser,patientDetail } = useUserAuth();
+  const { setClickedUser, patientDetail } = useUserAuth();
   const [lasts, setLasts] = useState([]);
 
   // Fetch user list
@@ -67,9 +67,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
       patientDetail.uid > id
         ? `${id}_${patientDetail.uid}`
         : `${patientDetail.uid}_${id}`;
-    const message = lastMessages.find(
-      (msg) => msg.conversationId === conversationId
-    );
+    const message = lasts.find((msg) => msg.conversationId === conversationId);
     return message ? message.message.text : "No messages yet";
   };
   return (
@@ -95,7 +93,9 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                 <LiaUser className="bg-gray-200 text-white rounded-full text-4xl mr-3" />
                 <div className="text-black font-bold">
                   <span>{user.fullName || "User"}</span> <br />
-                  <span className="text-sm text-gray-500">{getLastMsgs(otherUserId)}</span>
+                  <span className="text-sm text-gray-500">
+                    {getLastMsgs(otherUserId)}
+                  </span>
                 </div>
               </div>
             </li>
