@@ -64,7 +64,27 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         ? `${id}_${patientDetail.uid}`
         : `${patientDetail.uid}_${id}`;
     const message = lasts.find((msg) => msg.conversationId === conversationId);
-    return message ? message.message.text : "No messages yet";
+    return message ? (
+      message.message.text
+    ) : (
+      <span className="text-blue-500">start chat</span>
+    );
+  };
+
+  const getLastMsgsTime = (id) => {
+    if (!patientDetail.uid || !id) return "No messages yet"; // Guard against missing patientDetail.uid/id
+    const conversationId =
+      patientDetail.uid > id
+        ? `${id}_${patientDetail.uid}`
+        : `${patientDetail.uid}_${id}`;
+    const message = lasts.find((msg) => msg.conversationId === conversationId);
+    return message && message.message.createdAt
+      ? message.message.createdAt.toDate().toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        })
+      : "";
   };
   return (
     <div className="h-[80vh] overflow-y-scroll hide-scrollbar">
@@ -74,7 +94,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         ) : (
           users.map((user) => (
             <li
-              className="flex justify-between items-center p-3 mt-2 shadow-md rounded-lg cursor-pointer"
+              className="flex justify-between items-center p-3 mt-2 shadow-md bg-white rounded-lg cursor-pointer"
               key={user.id}
               onClick={() => {
                 setClickedUser({
@@ -85,12 +105,20 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                 console.log("Clicked User:", user); // Log the clicked user
               }}
             >
-              <div className="flex items-center">
-                <LiaUser className="bg-gray-200 text-white rounded-full text-4xl mr-3" />
-                <div className="text-black font-bold">
-                  <span>{user.fullName || "User"}</span> <br />
-                  <span className="text-sm text-gray-500">
-                    {getLastMsgs(user.id)}
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
+                  <div className="text-black font-bold">
+                    <span>{user.fullName || "User"}</span> <br />
+                    <span className="text-sm text-gray-500">
+                      {getLastMsgs(user.id)}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-sm text-black font-bold">
+                    {getLastMsgsTime(user.id)}
                   </span>
                 </div>
               </div>
