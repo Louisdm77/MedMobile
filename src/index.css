@@ -37,15 +37,15 @@ body {
   font-size: 12px;
 } */
 .view {
-  background-color: #1F487E
+  background-color: #1f487e;
 }
 
 .viewi {
-  background-color: #313B72
+  background-color: #313b72;
 }
 
 .viewii {
-  color: #313B72
+  color: #313b72;
 }
 
 .color {
@@ -74,6 +74,21 @@ input {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Hide scrollbar */
 }
-.round{
+.round {
   border-radius: 10px;
+}
+
+/* Hide the date text */
+.custom-date-input::-webkit-datetime-edit {
+  display: none;
+}
+
+/* Style the calendar icon */
+.custom-date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+.font{
+  font-weight: 400;
+  font-size: medium;
 }

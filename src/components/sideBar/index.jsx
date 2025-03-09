@@ -36,7 +36,7 @@ export const SideBar = () => {
     {
       name: "Feedback",
       icon: <LuMessageSquare />,
-      link: "#",
+      link: "/feedback",
     },
     {
       name: "Settings",

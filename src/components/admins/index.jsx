@@ -94,7 +94,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         ) : (
           users.map((user) => (
             <li
-              className="flex justify-between items-center p-3 mt-2 shadow-md bg-white rounded-lg cursor-pointer"
+              className="flex justify-between items-center p-3 mt-4 shadow-md bg-white rounded-lg cursor-pointer"
               key={user.id}
               onClick={() => {
                 setClickedUser({

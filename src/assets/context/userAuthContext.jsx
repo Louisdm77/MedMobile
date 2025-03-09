@@ -92,6 +92,7 @@ export const UserAuthProvider = ({ children }) => {
     allergies: [],
     medicalConditions: [],
     address: "",
+    // last: "",
   });
 
   const [clickedUser, setClickedUser] = useState({
