@@ -55,7 +55,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
       console.log("Unsubscribing from last messages updates");
       unsubscribe();
     };
-  }, []); // Add conversationId to dependency array
+  }, []);
 
   const getLastMsgs = (id) => {
     if (!patientDetail.uid || !id) return "No messages yet"; // Guard against missing patientDetail.uid/id
@@ -90,7 +90,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                 <div className="text-black font-bold">
                   <span>{user.fullName || "User"}</span> <br />
                   <span className="text-sm text-gray-500">
-                    {getLastMsgs(otherUserId)}
+                    {getLastMsgs(user.id)}
                   </span>
                 </div>
               </div>
