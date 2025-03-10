@@ -3,6 +3,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 import Layout from "../../components/layout";
 import StaffExperience from "../../components/staffExperience";
+import AppExperience from "../../components/appExperience";
 
 const Feedback = () => {
   return (
@@ -13,8 +14,7 @@ const Feedback = () => {
           <div>
             <h1 className="font-bold text-2xl">Feedback</h1>
             <p className="text-lg">Your feedback helps enhance our service.</p>
-          </div>
-          {" "}
+          </div>{" "}
           <div className="relative">
             <input
               type="text"
@@ -35,10 +35,13 @@ const Feedback = () => {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 p-2">
-      <div className="">
-        <StaffExperience />
-      </div>
+      <div className="grid grid-cols-[50%_40%] p-6 gap-8">
+        <div className="">
+          <StaffExperience />
+        </div>
+        <div>
+          <AppExperience />
+        </div>
       </div>
     </Layout>
   );
