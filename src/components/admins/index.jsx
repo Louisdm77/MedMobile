@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query } from "@firebase/firestore";
+import { collection, onSnapshot } from "@firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { LiaUser } from "react-icons/lia";
 import { db } from "../../assets/firebaseConfig";
@@ -12,7 +12,6 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   // Fetch user list
   useEffect(() => {
     const userListRef = collection(db, "patientsData");
-
     const unsubscribe = onSnapshot(
       userListRef,
       (snapshot) => {
@@ -20,7 +19,6 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
           id: doc.id,
           ...doc.data(),
         }));
-
         console.log("Snapshot Data:", usersList);
         setUsers(usersList);
       },
@@ -28,19 +26,19 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         console.error("Error fetching users:", error);
       }
     );
-
     return () => {
       console.log("Unsubscribing from user updates");
       unsubscribe();
     };
   }, []);
 
+  // Fetch last messages
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "last_msgs"), // Correct: Fetch the entire collection
+      collection(db, "last_msgs"),
       (snapshot) => {
         const lastMessages = snapshot.docs.map((doc) => ({
-          conversationId: doc.id, // Document ID is the conversationId
+          conversationId: doc.id,
           ...doc.data(),
         }));
         setLasts(lastMessages);
@@ -50,7 +48,6 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         console.error("Error fetching last messages:", error);
       }
     );
-
     return () => {
       console.log("Unsubscribing from last messages updates");
       unsubscribe();
@@ -58,7 +55,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   }, []);
 
   const getLastMsgs = (id) => {
-    if (!patientDetail.uid || !id) return "No messages yet"; // Guard against missing patientDetail.uid/id
+    if (!patientDetail.uid || !id) return "No messages yet";
     const conversationId =
       patientDetail.uid > id
         ? `${id}_${patientDetail.uid}`
@@ -76,27 +73,76 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   };
 
   const getLastMsgsTime = (id) => {
-    if (!patientDetail.uid || !id) return "No messages yet"; // Guard against missing patientDetail.uid/id
+    if (!patientDetail.uid || !id) return "";
+
     const conversationId =
       patientDetail.uid > id
         ? `${id}_${patientDetail.uid}`
         : `${patientDetail.uid}_${id}`;
     const message = lasts.find((msg) => msg.conversationId === conversationId);
-    return message && message.message.createdAt
-      ? message.message.createdAt.toDate().toLocaleTimeString(undefined, {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        })
-      : "";
+
+    if (!message || !message.message.createdAt) return "";
+
+    const msgDate = message.message.createdAt.toDate();
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    // Reset time portion for accurate date comparison
+    const resetTime = (date) =>
+      new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const msgDay = resetTime(msgDate);
+    const todayDay = resetTime(today);
+    const yesterdayDay = resetTime(yesterday);
+
+    if (msgDay.getTime() === todayDay.getTime()) {
+      return msgDate.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } else if (msgDay.getTime() === yesterdayDay.getTime()) {
+      return "Yesterday";
+    } else {
+      return msgDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+      });
+    }
   };
+
+  // Sort users by last message timestamp (most recent first)
+  const sortedUsers = [...users].sort((a, b) => {
+    const aConversationId =
+      patientDetail.uid > a.id
+        ? `${a.id}_${patientDetail.uid}`
+        : `${patientDetail.uid}_${a.id}`;
+    const bConversationId =
+      patientDetail.uid > b.id
+        ? `${b.id}_${patientDetail.uid}`
+        : `${patientDetail.uid}_${b.id}`;
+
+    const aMessage = lasts.find(
+      (msg) => msg.conversationId === aConversationId
+    );
+    const bMessage = lasts.find(
+      (msg) => msg.conversationId === bConversationId
+    );
+
+    const aTime = aMessage?.message?.createdAt?.toDate?.() || 0;
+    const bTime = bMessage?.message?.createdAt?.toDate?.() || 0;
+
+    return bTime - aTime; // Descending order (most recent first)
+  });
+
   return (
     <div className="h-[80vh] overflow-y-scroll hide-scrollbar">
       <ul>
         {users.length === 0 ? (
-          <li>Loading users...</li> // Add loading state
+          <li>Loading users...</li>
         ) : (
-          users.map((user) => (
+          sortedUsers.map((user) => (
             <li
               className="flex justify-between items-center p-3 mt-4 shadow-md bg-white rounded-lg cursor-pointer"
               key={user.id}
@@ -106,23 +152,21 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                   name: user.fullName || "User",
                   email: user.email || "No email provided",
                 });
-                console.log("Clicked User:", user); // Log the clicked user
+                console.log("Clicked User:", user);
               }}
             >
               <div className="grid grid-cols-[10%_70%_20%] w-full">
                 <div>
                   <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
                 </div>
-
                 <div className="text-black font-bold">
                   <span>{user.fullName || "User"}</span> <br />
                   <span className="text-sm text-gray-500">
                     {getLastMsgs(user.id)}
                   </span>
                 </div>
-
                 <div>
-                  <span className="text-sm text-black font-bold">
+                  <span className="text-sm text-black ">
                     {getLastMsgsTime(user.id)}
                   </span>
                 </div>
