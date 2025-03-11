@@ -65,7 +65,11 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
         : `${patientDetail.uid}_${id}`;
     const message = lasts.find((msg) => msg.conversationId === conversationId);
     return message ? (
-      message.message.text
+      message.message.text.length > 30 ? (
+        message.message.text.substring(0, 35) + " ..."
+      ) : (
+        message.message.text
+      )
     ) : (
       <span className="text-blue-500">start chat</span>
     );
@@ -105,15 +109,16 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                 console.log("Clicked User:", user); // Log the clicked user
               }}
             >
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center">
+              <div className="grid grid-cols-[10%_70%_20%] w-full">
+                <div>
                   <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
-                  <div className="text-black font-bold">
-                    <span>{user.fullName || "User"}</span> <br />
-                    <span className="text-sm text-gray-500">
-                      {getLastMsgs(user.id)}
-                    </span>
-                  </div>
+                </div>
+
+                <div className="text-black font-bold">
+                  <span>{user.fullName || "User"}</span> <br />
+                  <span className="text-sm text-gray-500">
+                    {getLastMsgs(user.id)}
+                  </span>
                 </div>
 
                 <div>
