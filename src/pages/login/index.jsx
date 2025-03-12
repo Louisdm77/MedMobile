@@ -20,15 +20,28 @@ const Login = () => {
   const [userLogInInfo, setUserLogInInfo] = useState(initialValue);
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      console.log("the user info is :", userLogInInfo);
+      console.log("The user info is:", userLogInInfo);
+
+      // Attempt to log in the user
       await login(userLogInInfo.email, userLogInInfo.password);
-      console.log(user);
-      // console.log("user", user);
+
+      // If login is successful, navigate to the home page
       navigate("/");
     } catch (err) {
-      console.log("err: ", err);
-      setErrors({ ...err, credentials: "something went wrong" });
+      console.log("Error:", err);
+
+      // Check for specific error codes and set error messages accordingly
+      if (err.code === "auth/invalid-credential") {
+        setErrors({ ...errors, signupError: "Invalid Username or Password" });
+      } else if (err.code === "auth/user-not-found") {
+        setErrors({ ...errors, signupError: "User not found" });
+      } else if (err.code === "auth/wrong-password") {
+        setErrors({ ...errors, signupError: "Incorrect password" });
+      } else {
+        setErrors({ ...errors, generalError: "Something went wrong" });
+      }
     }
   };
 
@@ -138,8 +151,8 @@ const Login = () => {
                     </div>
                   </div>
 
-                  {errors.credentials && (
-                    <p className="text-red-500 text-sm">{errors.credentials}</p>
+                  {errors.signupError && (
+                    <p className="text-red-500 text-sm">{errors.signupError}</p>
                   )}
                 </div>
               </div>
@@ -156,7 +169,10 @@ const Login = () => {
                 className="text-lg  capitalize text-center w-full"
               >
                 Don&apos;t have any account yet?
-                <span className="text-blue-700 underline font-bold"> Sign Up</span>
+                <span className="text-blue-700 underline font-bold">
+                  {" "}
+                  Sign Up
+                </span>
               </Link>
             </div>
           </div>

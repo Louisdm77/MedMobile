@@ -8,6 +8,7 @@ const DataForm = () => {
 
   useEffect(() => {
     fetchPatientDetails(user, setPatientDetail, null);
+    
   }, [user]);
 
   const handleChange = (e) => {

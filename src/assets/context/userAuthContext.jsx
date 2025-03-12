@@ -53,6 +53,19 @@ export const UserAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [appExperience, setAppExperience] = useState({
+    starRating: 0,
+    difficult: "",
+    improvement: "",
+  });
+  const [staffExperience, setStaffExperience] = useState({
+    staff: "",
+    lastVisit: "",
+    staffExperience: [],
+    suggestion: [],
+    rating: 0,
+    details: "",
+  });
   const [patientDetail, setPatientDetail] = useState({
     uid: "",
     fullName: "",
@@ -71,6 +84,7 @@ export const UserAuthProvider = ({ children }) => {
     allergies: [],
     medicalConditions: [],
     address: "",
+    feedback: [],
   });
   const [otp, setOtp] = useState("");
   const [otpCode, setOtpCode] = useState("");
@@ -92,7 +106,7 @@ export const UserAuthProvider = ({ children }) => {
     allergies: [],
     medicalConditions: [],
     address: "",
-    // last: "",
+    feedback: [],
   });
 
   const [clickedUser, setClickedUser] = useState({
@@ -139,6 +153,10 @@ export const UserAuthProvider = ({ children }) => {
     setMessages,
     lastMsg,
     setLastMsg,
+    appExperience,
+    setAppExperience,
+    staffExperience,
+    setStaffExperience,
   };
 
   return (
