@@ -6,7 +6,8 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser, patientDetail } = useUserAuth();
+  const { setClickedUser, patientDetail, viewChat, setViewChat } =
+    useUserAuth();
   const [lasts, setLasts] = useState([]);
 
   // Fetch user list
@@ -152,6 +153,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                   name: user.fullName || "User",
                   email: user.email || "No email provided",
                 });
+                setViewChat(true);
                 console.log("Clicked User:", user);
               }}
             >

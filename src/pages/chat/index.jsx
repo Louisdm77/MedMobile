@@ -7,7 +7,7 @@ import Admins from "../../components/admins";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Chat = () => {
-  const { clickedUser, patientDetail } = useUserAuth();
+  const { clickedUser, patientDetail, viewChat, setViewChat } = useUserAuth();
 
   // Ensure patientDetail is defined before accessing uid
   const uid = patientDetail ? patientDetail.uid : null;
@@ -57,7 +57,11 @@ const Chat = () => {
               />
             </div>
 
-            <div className="w-full h-[82vh] relative shadow-2xl">
+            <div
+              className={`w-full h-[82vh] relative shadow-2xl  ${
+                viewChat ? "block" : "hidden"
+              }`}
+            >
               <SendMessage
                 conversationId={conversationId}
                 otherUserId={clickedUser.userId}

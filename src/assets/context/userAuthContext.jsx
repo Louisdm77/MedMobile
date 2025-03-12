@@ -53,6 +53,7 @@ export const UserAuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [viewChat, setViewChat] = useState(false);
   const [appExperience, setAppExperience] = useState({
     starRating: 0,
     difficult: "",
@@ -157,6 +158,8 @@ export const UserAuthProvider = ({ children }) => {
     setAppExperience,
     staffExperience,
     setStaffExperience,
+    viewChat,
+    setViewChat,
   };
 
   return (

@@ -17,8 +17,14 @@ import { MdPlayArrow } from "react-icons/md";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const SendMessage = ({ otherUserId, otherUserName }) => {
-  const { patientDetail, messages, setMessages, lastMsg, setLastMsg } =
-    useUserAuth();
+  const {
+    patientDetail,
+    messages,
+    setMessages,
+    lastMsg,
+    setLastMsg,
+   
+  } = useUserAuth();
   const [newMessage, setNewMessage] = useState("");
 
   const { uid, displayName, photoURL } = auth.currentUser || {};
@@ -84,7 +90,6 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
       messageData
     );
 
-  
     const lastMessage = {
       conversationId: conversationId,
       message: {
@@ -107,7 +112,7 @@ const SendMessage = ({ otherUserId, otherUserName }) => {
   };
 
   return (
-    <div className="relative h-full">
+    <div className={`relative h-full`}>
       <MessangerInfo />
       <div className="overflow-y-auto h-[55vh] hide-scrollbar p-4">
         {messages.map((msg) => (
