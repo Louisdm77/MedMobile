@@ -70,8 +70,13 @@ export const SideBar = () => {
           ))}
 
           <div className=" ">
-            <Link to="" >
-              <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 ">
+            <Link to="/help" >
+              <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "   style={{
+                  backgroundColor: clicked === 'help' ? "white" : "",
+                
+                }} onClick={() => {
+                  setClicked('help');
+                }} >
                 <span className="mr-4 font-bold text-xl ">
                   <IoIosHelpCircleOutline />
                 </span>{" "}

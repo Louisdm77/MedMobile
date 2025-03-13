@@ -162,7 +162,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                   <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
                 </div>
                 <div className="text-black font-bold">
-                  <span>{user.fullName || "User"}</span> <br />
+                  <span className="capitalize">{user.fullName || "User"}</span> <br />
                   <span className="text-sm text-gray-500">
                     {getLastMsgs(user.id)}
                   </span>

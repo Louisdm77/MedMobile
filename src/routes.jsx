@@ -13,6 +13,7 @@ import OtpInputt from "./components/otpInput";
 import Chat from "./pages/chat";
 import Feedback from "./pages/feedback";
 import ProfileEdit from "./components/editProfile";
+import Help from "./pages/help";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,11 @@ const router = createBrowserRouter([
       {
         path: "/profileEdit",
         element: <ProfileEdit />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/help",
+        element: <Help />,
         errorElement: <Error />,
       },
     ],
