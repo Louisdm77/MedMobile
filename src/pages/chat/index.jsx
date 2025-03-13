@@ -5,6 +5,7 @@ import { FaRegBell, FaRegUser } from "react-icons/fa";
 import SendMessage from "../../components/sendMessage";
 import Admins from "../../components/admins";
 import { useUserAuth } from "../../assets/context/userAuthContext";
+import { FaMinus } from "react-icons/fa";
 
 const Chat = () => {
   const { clickedUser, patientDetail, viewChat, setViewChat } = useUserAuth();
@@ -29,12 +30,14 @@ const Chat = () => {
               <h1 className="font-bold text-2xl">Chats</h1>
               <p className="text-lg">Connect with Medical Personnel.</p>
             </div>
+
             <div className="relative">
               <input
                 type="text"
                 placeholder="Search"
                 className="rounded-full w-full h-10 p-2 color border-none"
               />
+
               <button className="absolute right-3 top-3 text-xl">
                 <IoSearchOutline />
               </button>
@@ -62,6 +65,14 @@ const Chat = () => {
                 viewChat ? "block" : "hidden"
               }`}
             >
+              <button
+                className="absolute view top-[-15px] right-6 z-30 text-white p-1"
+                onClick={() => {
+                  setViewChat(false);
+                }}
+              >
+                <FaMinus />
+              </button>
               <SendMessage
                 conversationId={conversationId}
                 otherUserId={clickedUser.userId}

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import fetchPatientDetails from "../fetchPatientDetails";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { updatePatientDetails } from "../../repository/post.service";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { IoArrowBackCircleSharp } from "react-icons/io5";
 
 const DataForm = () => {
   const { user, patientDetail, setPatientDetail } = useUserAuth();
 
   useEffect(() => {
     fetchPatientDetails(user, setPatientDetail, null);
-    
   }, [user]);
 
   const handleChange = (e) => {
@@ -17,9 +18,10 @@ const DataForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent page reload
+    e.preventDefault();
     try {
       await updatePatientDetails(patientDetail);
+      navigate("/profile");
     } catch (err) {
       console.log(err);
     }
@@ -67,12 +69,25 @@ const DataForm = () => {
     setCondition(""); // Reset the input value
   };
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleBackButton = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="p-8 bg-white rounded-lg flex justify-center w-full">
+    <div className="p-8 bg-white rounded-lg flex justify-center w-full ">
       <form
-        className="w-[80%] p-8 border border-2 rounded-lg bg-gray-100 shadow-inner shadow-md"
+        className="w-[80%] p-8 border border-2 rounded-lg bg-gray-100 shadow-inner shadow-md relative"
         onSubmit={handleSubmit}
       >
+        <button
+          className="absolute top-0 left-0 view text-white font-bold p-2 text-xl"
+          onClick={handleBackButton}
+        >
+          <IoArrowBackCircleSharp />
+        </button>
         <p className="text-red-800 text-center">
           ensure to submit the form for proper update
         </p>

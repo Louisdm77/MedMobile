@@ -12,6 +12,7 @@ import BookAppointments from "./components/bookAppointments";
 import OtpInputt from "./components/otpInput";
 import Chat from "./pages/chat";
 import Feedback from "./pages/feedback";
+import ProfileEdit from "./components/editProfile";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,11 @@ const router = createBrowserRouter([
       {
         path: "/feedback",
         element: <Feedback />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/profileEdit",
+        element: <ProfileEdit />,
         errorElement: <Error />,
       },
     ],

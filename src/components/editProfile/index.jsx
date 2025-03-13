@@ -2,11 +2,13 @@ import { React } from "react";
 import Layout from "../../components/layout";
 import DataForm from "../../components/dataForm";
 
-const Settings = () => {
+const ProfileEdit = () => {
   return (
     <div>
-      <Layout>settings</Layout>
+      <Layout>
+        <DataForm />
+      </Layout>
     </div>
   );
 };
-export default Settings;
+export default ProfileEdit;
