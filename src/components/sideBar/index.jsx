@@ -70,7 +70,7 @@ export const SideBar = () => {
           ))}
 
           <div className=" ">
-            <Link to="/login" >
+            <Link to="" >
               <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 ">
                 <span className="mr-4 font-bold text-xl ">
                   <IoIosHelpCircleOutline />

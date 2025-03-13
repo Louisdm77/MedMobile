@@ -11,6 +11,7 @@ import { getAuth } from "@firebase/auth";
 import { fetchSignInMethodsForEmail } from "@firebase/auth";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
+import home from "../../assets/images/home.png"
 
 const SignUp = () => {
   const { signUp, user, data, setData } = useUserAuth();
@@ -457,7 +458,7 @@ const SignUp = () => {
       <div className="md:grid md:grid-cols-2 gap-2">
         <div className="text-center hidden md:block">
           <img
-            src="https://s3-alpha-sig.figma.com/img/fc06/ca65/d0fc244a6615f4494c3fb4cbba05c3a2?Expires=1739750400&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=Ir50xqZ4g-Qrc1K7kQb898g~2K8ME3tIVjksM67HdEdZNz1KqLglzoxsGAFqxVkc~hcRJiDGaXO9fmCwpl3c6L~Y3MpvnU~DE3j-yPGD-CXt0xk~N2PTCj1qS~sNZAQDlhYLcgCjnkeZe7B4fSd8tycEyxnOXtfupnM-iF1LiJGglvwp15hnuDUR-qkxWtpV5tvu4PwOCLUofTy45hqdlZqc6FMx3FrJgjYxMkK96wIaMIBXlti1PNEZCv~abmXS0F3pEgW9pReD7CRTRX8tqR2vydL1m1auG54NqvlbgmGT6NbgMEicJzhlXNX5XGLudfW9w-htO1J2-9vewnE5tw"
+            src={home}
             className="w-full"
           />
           <div className="text-start mx-16">
