@@ -1,16 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Customization = () => {
   return (
     <div>
       <h2 className="homee font-semibold mb-1 mt-2 p-1">App Customization</h2>
       <div className=" shadow-lg bg-white p-3 rounded-md text-sm">
-        <div className="flex justify-between items-center">
+        <Link className="flex justify-between items-center">
           <div>Font Size Adjustment</div>
-        </div>
-        <div className="flex justify-between items-center mt-4">
+        </Link>
+        <Link className="flex justify-between items-center mt-4">
           <div>Theme Option</div>
-        </div>
+        </Link>
       </div>
     </div>
   );

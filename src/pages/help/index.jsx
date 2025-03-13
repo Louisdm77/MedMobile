@@ -3,6 +3,8 @@ import Layout from "../../components/layout";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 import Faq from "../../components/faq";
+import ContactSupport from "../../components/contactSupport";
+import Chatbot from "../../components/chatBot";
 
 const Help = () => {
   return (
@@ -37,14 +39,15 @@ const Help = () => {
           </div>
         </div>
         <div className="w-full grid grid-cols-2 p-6 gap-8 font-normal">
-            <div className="w-[75%] justify-center">
-              <Faq/>
-            </div>
-
-            <div></div>
+          <div className="w-[75%] justify-center">
+            <Faq />
+            <ContactSupport />
+            <Chatbot />
           </div>
-      </div>
 
+          <div></div>
+        </div>
+      </div>
     </Layout>
   );
 };
