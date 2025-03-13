@@ -67,6 +67,7 @@ export const UserAuthProvider = ({ children }) => {
     rating: 0,
     details: "",
   });
+
   const [patientDetail, setPatientDetail] = useState({
     uid: "",
     fullName: "",
@@ -86,6 +87,7 @@ export const UserAuthProvider = ({ children }) => {
     medicalConditions: [],
     address: "",
     feedback: [],
+    appointments: [],
   });
   const [otp, setOtp] = useState("");
   const [otpCode, setOtpCode] = useState("");
@@ -108,6 +110,7 @@ export const UserAuthProvider = ({ children }) => {
     medicalConditions: [],
     address: "",
     feedback: [],
+    appointments: [],
   });
 
   const [clickedUser, setClickedUser] = useState({

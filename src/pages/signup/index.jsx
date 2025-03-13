@@ -11,7 +11,7 @@ import { getAuth } from "@firebase/auth";
 import { fetchSignInMethodsForEmail } from "@firebase/auth";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
-import home from "../../assets/images/home.png"
+import home from "../../assets/images/home.png";
 
 const SignUp = () => {
   const { signUp, user, data, setData } = useUserAuth();
@@ -61,7 +61,7 @@ const SignUp = () => {
           setData(newPatientData);
           await createPatientData(newPatientData);
           console.log("Signup successful:", response);
-          navigate("/settings");
+          navigate("/");
         } else {
           setErrors({
             ...errors,
@@ -457,10 +457,7 @@ const SignUp = () => {
     <div className="homee p-6">
       <div className="md:grid md:grid-cols-2 gap-2">
         <div className="text-center hidden md:block">
-          <img
-            src={home}
-            className="w-full"
-          />
+          <img src={home} className="w-full" />
           <div className="text-start mx-16">
             <h3 className="font-extrabold text-4xl mt-8 p-2">Medmobile</h3>
             <p className="font-medium text-2xl">
