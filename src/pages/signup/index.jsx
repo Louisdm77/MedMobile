@@ -466,7 +466,7 @@ const SignUp = () => {
           </div>
         </div>
         <div>
-          <div className="shadow-2xl h-auto w-full m-auto my-auto p-4 py-2  rounded">
+          <div className=" h-auto w-full m-auto my-auto p-4 py-2  rounded">
             <h2 className="text-center mt-3 mb-8 text-4xl font-bold">
               Sign Up
             </h2>

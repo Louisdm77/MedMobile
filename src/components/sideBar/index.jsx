@@ -9,6 +9,7 @@ import { IoIosHelpCircleOutline } from "react-icons/io";
 import { MdOutlineLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useUserAuth } from "../../assets/context/userAuthContext";
+import { FaStaffSnake } from "react-icons/fa6";
 
 export const SideBar = () => {
   const { clicked, setClicked, logOut } = useUserAuth();
@@ -48,7 +49,12 @@ export const SideBar = () => {
   return (
     <div className="color h-screen fixed w-[20%]">
       <div className="  p-6 h-full ">
-        <h2 className="text-center font-bold text-2xl mt-6">Medmobile</h2>
+        <h2 className="text-center font-bold text-2xl mt-6 flex items-center">
+          <span className="snake">
+            <FaStaffSnake />
+          </span>
+          <span>Medmobile</span>
+        </h2>
         <ul className="px-1 mt-8">
           {navigation.map((nav, index) => (
             <Link to={nav.link}>
@@ -57,7 +63,6 @@ export const SideBar = () => {
                 className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "
                 style={{
                   backgroundColor: clicked === nav.name ? "white" : "",
-                
                 }}
                 onClick={() => {
                   setClicked(nav.name);
@@ -70,13 +75,16 @@ export const SideBar = () => {
           ))}
 
           <div className=" ">
-            <Link to="/help" >
-              <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "   style={{
-                  backgroundColor: clicked === 'help' ? "white" : "",
-                
-                }} onClick={() => {
-                  setClicked('help');
-                }} >
+            <Link to="/help">
+              <li
+                className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "
+                style={{
+                  backgroundColor: clicked === "help" ? "white" : "",
+                }}
+                onClick={() => {
+                  setClicked("help");
+                }}
+              >
                 <span className="mr-4 font-bold text-xl ">
                   <IoIosHelpCircleOutline />
                 </span>{" "}

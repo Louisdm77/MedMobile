@@ -84,7 +84,7 @@ const Login = () => {
             </div>
           </div>
           <div className="w-full p-12  rounded-xl">
-            <div className="shadow-2xl  w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl ">
+            <div className="  w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl ">
               <p className="text-3xl font-bold text-center mt-10">Login</p>
               <div>
                 <div className="mt-2">
