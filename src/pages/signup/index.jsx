@@ -7,83 +7,17 @@ import { FaDotCircle } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
-import { getAuth } from "@firebase/auth";
-import { fetchSignInMethodsForEmail } from "@firebase/auth";
-import { FaRegEye } from "react-icons/fa";
-import { FaRegEyeSlash } from "react-icons/fa";
+import { getAuth, fetchSignInMethodsForEmail } from "@firebase/auth";
 import home from "../../assets/images/home.png";
+import OtpInput from "react18-input-otp";
 
 const SignUp = () => {
-  const { signUp, user, data, setData } = useUserAuth();
-  const navigate = useNavigate(); // Add useNavigate for redirection
+  const { signInWithPhone, verifyCode, data, setData } = useUserAuth();
+  const navigate = useNavigate();
   const [signupPage, setSignupPage] = useState(1);
   const [progress, setProgress] = useState(0);
   const [errors, setErrors] = useState({});
-  const initialValue = {
-    email: "",
-    password: "",
-    // confirmPassword: "",
-  };
-
-  const [viewPassword, setViewPassword] = useState(false);
-  // const [viewConfirmPassword, setViewConfirmPassword] = useState(false);
-  const [userInfo, setUserInfo] = useState(initialValue);
-
-  const [dataList, setDataList] = useState([]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateFields()) {
-      try {
-        // Check if the email is already in use
-        const signInMethods = await fetchSignInMethodsForEmail(
-          getAuth(),
-          userInfo.email
-        );
-        if (signInMethods.length > 0) {
-          setErrors({
-            ...errors,
-            signupError: "User with this email already exists",
-          });
-          return; // Stop further execution
-        }
-
-        // Proceed to sign up the user
-        const response = await signUp(userInfo.email, userInfo.password);
-        const user = getAuth().currentUser;
-
-        if (user) {
-          const newPatientData = {
-            ...data,
-            email: userInfo.email,
-            uid: user.uid,
-          };
-          setData(newPatientData);
-          await createPatientData(newPatientData);
-          console.log("Signup successful:", response);
-          navigate("/");
-        } else {
-          setErrors({
-            ...errors,
-            signupError:
-              "User not authenticated, cannot proceed with data save.",
-          });
-        }
-      } catch (err) {
-        console.log("Signup error:", err);
-        if (err.code === "auth/invalid-email") {
-          setErrors({ ...errors, signupError: "Invalid email address" });
-        } else if (err.code === "auth/weak-password") {
-          setErrors({ ...errors, signupError: "Password not strong enough" });
-        } else {
-          setErrors({
-            ...errors,
-            signupError: "Something went wrong. Please try again",
-          });
-        }
-      }
-    }
-  };
+  const [otp, setOtp] = useState(""); // For OTP input in step 4
 
   const validateFields = () => {
     const newErrors = {};
@@ -101,37 +35,73 @@ const SignUp = () => {
         newErrors.emergencyContact = "Emergency Contact Name is required";
       if (!data.emergencyContactNum)
         newErrors.emergencyContactNum = "Emergency Contact Number is required";
-    } else if (signupPage === 4) {
-      if (userInfo.password.length < 6)
-        newErrors.password = "Password not strong enough";
-      // if (userInfo.confirmPassword !== userInfo.password)
-      //   newErrors.confirmPassword = "Passwords don't match";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNextPage = (e) => {
+  const handleNextPage = async (e) => {
     e.preventDefault();
     if (validateFields()) {
-      if (signupPage < 4) {
+      if (signupPage === 1) {
+        // Trigger phone authentication after collecting phone number
+        try {
+          const fullNum = `+234${data.phoneNumber}`;
+          await signInWithPhone(fullNum);
+          setSignupPage(4); // Jump to OTP verification
+          setProgress(100); // Set progress to 100% for final step
+        } catch (error) {
+          setErrors({
+            ...errors,
+            phoneError: "Error sending OTP: " + error.message,
+          });
+        }
+      } else if (signupPage < 3) {
         setSignupPage((prev) => prev + 1);
-        setProgress((prev) => prev + 25); // Adjusted for 4 pages
+        setProgress((prev) => prev + 33); // Adjusted for 3 steps + OTP
       }
     }
   };
 
   const handlePrevPage = (e) => {
     e.preventDefault();
-    if (signupPage > 1) {
+    if (signupPage === 4) {
+      setSignupPage(1); // Go back to first page from OTP
+      setProgress(0);
+    } else if (signupPage > 1) {
       setSignupPage((prev) => prev - 1);
-      setProgress((prev) => prev - 25); // Adjusted for 4 pages
+      setProgress((prev) => prev - 33);
     }
   };
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    try {
+      const user = await verifyCode(otp);
+      const newPatientData = {
+        ...data,
+        uid: user.uid,
+      };
+      setData(newPatientData);
+      await createPatientData(newPatientData);
+      navigate("/"); // Redirect to home after successful signup
+    } catch (error) {
+      setErrors({ ...errors, otpError: "Invalid OTP: " + error.message });
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const fullNum = `+234${data.phoneNumber}`;
+      await signInWithPhone(fullNum);
+      alert("OTP resent!");
+    } catch (error) {
+      setErrors({
+        ...errors,
+        otpError: "Error resending OTP: " + error.message,
+      });
+    }
+  };
 
   const renderPage = () => {
     switch (signupPage) {
@@ -164,12 +134,7 @@ const SignUp = () => {
                 placeholder="m@example.com"
                 className="box rounded-lg w-full p-3"
                 value={data.email}
-                onChange={(e) =>
-                  setData(
-                    { ...data, email: e.target.value },
-                    setUserInfo({ ...userInfo, email: e.target.value })
-                  )
-                }
+                onChange={(e) => setData({ ...data, email: e.target.value })}
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
@@ -201,8 +166,10 @@ const SignUp = () => {
               {errors.phoneNumber && (
                 <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
               )}
+              {errors.phoneError && (
+                <p className="text-red-500 text-sm">{errors.phoneError}</p>
+              )}
             </div>
-
             <button
               type="button"
               className="cont box w-full rounded text-center border border-2 border-black mt-4 p-2"
@@ -259,6 +226,7 @@ const SignUp = () => {
                 name="hospitalNum"
                 id="hospitalNum"
                 className="box w-full p-3 rounded-lg"
+                value={data.hospitalNum}
                 onChange={(e) =>
                   setData({ ...data, hospitalNum: e.target.value })
                 }
@@ -353,99 +321,70 @@ const SignUp = () => {
         );
       case 4:
         return (
-          <div>
-            <div className="grid">
-              <label htmlFor="password" className="font-bold">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={viewPassword ? "text" : "password"}
-                  placeholder="******"
-                  value={userInfo.password}
-                  className="box rounded-lg w-full p-3 relative"
-                  onChange={(e) =>
-                    setUserInfo({ ...userInfo, password: e.target.value })
-                  }
-                />{" "}
-                <div className="text-2xl absolute right-2 bottom-4 flex">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setViewPassword(!viewPassword);
+          <div className="w-full p-12 rounded-xl">
+            <div className="shadow-2xl w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl">
+              <h2 className="text-3xl font-bold text-center mt-10">
+                OTP VERIFICATION
+              </h2>
+              <p className="text-center mt-10">
+                Enter the 6-digit code sent to your phone
+              </p>
+              <form onSubmit={handleVerifyOtp}>
+                <div className="mt-6 flex justify-center">
+                  <OtpInput
+                    value={otp}
+                    onChange={setOtp}
+                    numInputs={6}
+                    shouldAutoFocus
+                    isInputNum
+                    inputStyle={{
+                      backgroundColor: "#d9d9d9",
+                      width: "3rem",
+                      height: "3rem",
+                      margin: "0 0.5rem",
+                      fontSize: "2rem",
+                      border: "2px solid #ccc",
+                      borderRadius: "8px",
+                      textAlign: "center",
                     }}
-                    className={`${!viewPassword ? "block" : "hidden"}`}
-                  >
-                    <FaRegEye />
-                  </button>
+                  />
+                </div>
+                {errors.otpError && (
+                  <p className="text-red-500 text-sm text-center mt-2">
+                    {errors.otpError}
+                  </p>
+                )}
+                <div className="text-center mt-4 border-none">
+                  <p>
+                    Didn't get a code?{" "}
+                    <button
+                      type="button"
+                      className="underline"
+                      onClick={handleResendOtp}
+                    >
+                      Resend
+                    </button>
+                  </p>
+                </div>
+                <div className="mt-8">
                   <button
-                    type="button"
-                    className={`${viewPassword ? "block" : "hidden"}`}
-                    onClick={() => {
-                      setViewPassword(!viewPassword);
-                    }}
+                    type="submit"
+                    className="cont border border-gray-900 font-bold py-3 px-4 w-full mb-10 rounded-xl"
                   >
-                    {" "}
-                    <FaRegEyeSlash />
+                    Verify
                   </button>
                 </div>
-              </div>
-              {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
-              )}
+              </form>
             </div>
-            {/* <div className="grid mt-2">
-              <label htmlFor="confirmPassword" className="font-bold">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  type={viewConfirmPassword ? "text" : "password"}
-                  placeholder="******"
-                  className="box rounded-lg w-full p-3"
-                  value={userInfo.confirmPassword}
-                  onChange={(e) =>
-                    setUserInfo({
-                      ...userInfo,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                />
-                <div className="text-2xl absolute right-2 bottom-4 flex">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setViewPassword(!viewConfirmPassword);
-                    }}
-                    className={`${!viewConfirmPassword ? "block" : "hidden"}`}
-                  >
-                    <FaRegEye />
-                  </button>
-                  <button
-                    type="button"
-                    className={`${viewPassword ? "block" : "hidden"}`}
-                    onClick={() => {
-                      setViewPassword(!viewConfirmPassword);
-                    }}
-                  >
-                    {" "}
-                    <FaRegEyeSlash />
-                  </button>
-                </div>
-              </div>
-              {errors.confirmPassword && (
-                <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
-              )}
-            </div> */}
-            <button
-              type="button"
-              className="cont w-full rounded text-center bg-white border border-2 border-black mt-8 p-2"
-              onClick={handleSubmit}
-            >
-              Sign Up
-            </button>
+            <div className="mt-4 flex items-center w-full text-center">
+              <Link
+                to="/login"
+                className="text-lg font-medium capitalize text-center w-full"
+              >
+                Already have an account?{" "}
+                <span className="text-blue-700 underline">Log in</span>
+              </Link>
+            </div>
           </div>
         );
       default:
@@ -466,15 +405,10 @@ const SignUp = () => {
           </div>
         </div>
         <div>
-          <div className=" h-auto w-full m-auto my-auto p-4 py-2  rounded">
+          <div className="h-auto w-full m-auto my-auto p-4 py-2 rounded">
             <h2 className="text-center mt-3 mb-8 text-4xl font-bold">
               Sign Up
             </h2>
-            <div>
-              {errors.signupError && (
-                <p className="text-red-500 text-sm">{errors.signupError}</p>
-              )}
-            </div>
             <div className="px-5 mb-5">
               <ProgressBar percent={progress}>
                 {[1, 2, 3, 4].map((step, index) => (
@@ -500,7 +434,6 @@ const SignUp = () => {
                 ))}
               </ProgressBar>
             </div>
-
             <div className={`${signupPage !== 4 ? "p-6" : "p-12"}`}>
               {renderPage()}
               <div className="text-center flex justify-center items-center font-medium">
@@ -508,19 +441,21 @@ const SignUp = () => {
                   className="flex items-center mt-6 text-xl"
                   onClick={handlePrevPage}
                 >
-                  <IoArrowBack /> &nbsp; <span>Back</span>
+                  <IoArrowBack /> <span>Back</span>
                 </button>
               </div>
             </div>
           </div>
-          <div>
-            <h2 className="text-center mt-4 ">
-              Already have an account?{" "}
-              <Link to="/login" className="text-blue-800 underline font-bold">
-                log in
-              </Link>
-            </h2>
-          </div>
+          {signupPage !== 4 && (
+            <div>
+              <h2 className="text-center mt-4">
+                Already have an account?{" "}
+                <Link to="/login" className="text-blue-800 underline font-bold">
+                  Log in
+                </Link>
+              </h2>
+            </div>
+          )}
         </div>
       </div>
     </div>

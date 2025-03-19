@@ -7,33 +7,38 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
 } from "@firebase/auth";
 
+// These are your original functions, unchanged
 const login = async (email, password) => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.log(err);
-    throw err; // Rethrow the error so it can be handled by the caller
+    throw err;
   }
 };
 
-const signUp = async (email, password) => {
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-  } catch (err) {
-    console.log(err);
-    throw err; // Rethrow the error so it can be handled by the caller
-  }
-};
+// const signUp = async (email, password) => {
+//   try {
+//     await createUserWithEmailAndPassword(auth, email, password);
+//   } catch (err) {
+//     console.log(err);
+//     throw err;
+//   }
+// };
 
+// Your commented-out Google sign-in (unchanged)
 // const googleSignIn = async () => {
 //   try {
 //     const googleAuthProvider = new GoogleAuthProvider();
 //     await signInWithPopup(auth, googleAuthProvider);
 //   } catch (err) {
 //     console.log(err);
-//     throw err; // Rethrow the error so it can be handled by the caller
+//     throw err;
 //   }
 // };
 
@@ -42,7 +47,7 @@ const logOut = async () => {
     await signOut(auth);
   } catch (err) {
     console.log(err);
-    throw err; // Rethrow the error so it can be handled by the caller
+    throw err;
   }
 };
 
@@ -50,6 +55,7 @@ const userAuthContext = createContext({});
 
 export const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [confirmationResult, setConfirmationResult] = useState(null); // Added for phone sign-in
   const [loading, setLoading] = useState(true);
   const [clicked, setClicked] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +73,6 @@ export const UserAuthProvider = ({ children }) => {
     rating: 0,
     details: "",
   });
-
   const [patientDetail, setPatientDetail] = useState({
     uid: "",
     fullName: "",
@@ -112,7 +117,6 @@ export const UserAuthProvider = ({ children }) => {
     feedback: [],
     appointments: [],
   });
-
   const [clickedUser, setClickedUser] = useState({
     userId: "",
     name: "",
@@ -123,22 +127,88 @@ export const UserAuthProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
   const [lastMsg, setLastMsg] = useState([]);
 
+  // Moved your reCAPTCHA useEffect inside the component
+  useEffect(() => {
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          console.log("reCAPTCHA solved:", response);
+        },
+      }
+    );
+
+    return () => {
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+      }
+    };
+  }, []);
+
+  // Your original auth state listener (unchanged)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser); // Set user to the current user object
+      setUser(currentUser);
       setLoading(false);
     });
 
     return unsubscribe;
   }, []);
 
+  // Phone sign-in functions moved inside to access state
+  const signInWithPhone = async (phoneNumber) => {
+    try {
+      const appVerifier = window.recaptchaVerifier;
+      // Remove leading zeros and all non-digit characters, take last 10 digits
+      const cleanedNumber = phoneNumber.replace(/^0+|[^\d]/g, "").slice(-10);
+      const fullNumber = `+234${cleanedNumber}`;
+
+      // Log before validation
+      console.log("Constructed phone number:", fullNumber);
+
+      // Validate: +234 (4 chars including +) + 10 digits = 14 chars
+      if (fullNumber.length !== 14 || !/^\+234\d{10}$/.test(fullNumber)) {
+        throw new Error(
+          "Invalid phone number. Must be 10 digits after +234 (e.g., +2348135390524)."
+        );
+      }
+
+      // Log right before sending to Firebase
+      console.log("Sending to Firebase:", fullNumber);
+
+      const result = await signInWithPhoneNumber(auth, fullNumber, appVerifier);
+      setConfirmationResult(result);
+      return result;
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      throw error;
+    }
+  };
+  const verifyCode = async (code) => {
+    try {
+      if (!confirmationResult)
+        throw new Error("No confirmation result available");
+      const result = await confirmationResult.confirm(code);
+      setUser(result.user); // Now works because it's in scope
+      setConfirmationResult(null);
+      return result.user;
+    } catch (error) {
+      console.error("Error verifying code:", error);
+      throw error;
+    }
+  };
+
   const value = {
     user,
     loading,
-    signUp,
+    // signUp,
     logOut,
-    // googleSignIn,
+    // googleSignIn, // Still commented out as in your original
     login,
+    signInWithPhone, // Added
+    verifyCode, // Added
     clicked,
     setClicked,
     data,
@@ -168,6 +238,7 @@ export const UserAuthProvider = ({ children }) => {
   return (
     <userAuthContext.Provider value={value}>
       {children}
+      <div id="recaptcha-container"></div> {/* Added for reCAPTCHA */}
     </userAuthContext.Provider>
   );
 };
