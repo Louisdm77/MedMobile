@@ -3,15 +3,36 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import OtpInput from "react18-input-otp";
 import home from "../../assets/images/home.png";
+import { db } from "../../assets/firebaseConfig";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 const Login = () => {
   const { signInWithPhone, verifyCode } = useUserAuth();
   const navigate = useNavigate();
-
+  
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
-  const [step, setStep] = useState("phone"); // "phone" or "otp"
+  const [step, setStep] = useState("phone");
   const [errors, setErrors] = useState({});
+
+  // Check if user exists in Firestore by subscriber number
+  const checkUserExists = async (subscriberNumber) => {
+    const usersRef = collection(db, "patientsData");
+    // Check both formats: "8135390524" and "08135390524"
+    const q1 = query(usersRef, where("phoneNumber", "==", subscriberNumber));
+    const q2 = query(usersRef, where("phoneNumber", "==", `0${subscriberNumber}`));
+    
+    const [querySnapshot1, querySnapshot2] = await Promise.all([
+      getDocs(q1),
+      getDocs(q2)
+    ]);
+    
+    console.log("Querying Firestore for subscriber number:", subscriberNumber);
+    console.log("Found without 0:", querySnapshot1.docs.map(doc => doc.data()));
+    console.log("Found with 0:", querySnapshot2.docs.map(doc => doc.data()));
+    
+    return !querySnapshot1.empty || !querySnapshot2.empty;
+  };
 
   // Handle sending OTP
   const handleSendOtp = async (e) => {
@@ -21,16 +42,22 @@ const Login = () => {
       const cleanedNumber = phoneNumber.replace(/^0+|[^\d]/g, "").slice(-10);
       const fullNumber = `+234${cleanedNumber}`;
       if (fullNumber.length !== 14 || !/^\+234\d{10}$/.test(fullNumber)) {
-        setErrors({
-          signupError:
-            "Please enter a valid 10-digit phone number (e.g., 8135390524)",
-        });
+        setErrors({ signupError: "Please enter a valid 10-digit phone number (e.g., 8135390524)" });
         return;
       }
+
+      const subscriberNumber = cleanedNumber; // e.g., "8135390524"
+      const userExists = await checkUserExists(subscriberNumber);
+      if (!userExists) {
+        setErrors({ signupError: "You don’t have an account. Please sign up." });
+        return;
+      }
+
       await signInWithPhone(phoneNumber);
       setStep("otp");
     } catch (err) {
-      setErrors({ signupError: "Error sending OTP Number Invalid"});
+      console.log("Login error:", err);
+      setErrors({ signupError: "Error sending OTP: " + err.message });
     }
   };
 
@@ -50,6 +77,15 @@ const Login = () => {
   const handleResendOtp = async () => {
     setErrors({});
     try {
+      const cleanedNumber = phoneNumber.replace(/^0+|[^\d]/g, "").slice(-10);
+      const fullNumber = `+234${cleanedNumber}`;
+      const subscriberNumber = cleanedNumber;
+      const userExists = await checkUserExists(subscriberNumber);
+      if (!userExists) {
+        setErrors({ signupError: "You don’t have an account. Please sign up." });
+        return;
+      }
+
       await signInWithPhone(phoneNumber);
       alert("OTP resent!");
     } catch (err) {
@@ -72,8 +108,8 @@ const Login = () => {
                 <span>Access Your Healthcare</span> <br /> Anytime, Anywhere
               </h3>
               <p className="text-xl">
-                Enter your details to manage appointments, view prescriptions
-                and stay on top of your health.
+                Enter your details to manage appointments, view prescriptions and
+                stay on top of your health.
               </p>
             </div>
           </div>
@@ -108,9 +144,7 @@ const Login = () => {
                       />
                     </div>
                     {errors.signupError && (
-                      <p className="text-red-500 text-sm">
-                        {errors.signupError}
-                      </p>
+                      <p className="text-red-500 text-sm">{errors.signupError}</p>
                     )}
                   </div>
                   <div className="mt-8">
@@ -150,7 +184,7 @@ const Login = () => {
                   )}
                   <div className="text-center mt-4 border-none">
                     <p>
-                      Didn't get a code?{" "}
+                      Didn’t get a code?{" "}
                       <button
                         type="button"
                         className="underline"
@@ -174,7 +208,7 @@ const Login = () => {
                 to="/signup"
                 className="text-lg capitalize text-center w-full"
               >
-                Don't have any account yet?{" "}
+                Don’t have any account yet?{" "}
                 <span className="text-blue-700 underline font-bold">
                   Sign Up
                 </span>

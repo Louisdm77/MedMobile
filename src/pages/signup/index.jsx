@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import "react-step-progress-bar/styles.css";
@@ -7,7 +7,6 @@ import { FaDotCircle } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
-import { getAuth, fetchSignInMethodsForEmail } from "@firebase/auth";
 import home from "../../assets/images/home.png";
 import OtpInput from "react18-input-otp";
 
@@ -43,22 +42,34 @@ const SignUp = () => {
   const handleNextPage = async (e) => {
     e.preventDefault();
     if (validateFields()) {
-      if (signupPage === 1) {
-        // Trigger phone authentication after collecting phone number
+      if (signupPage < 3) {
+        // Move to next step without OTP
+        setSignupPage((prev) => prev + 1);
+        setProgress((prev) => prev + 33); // Increment progress
+      } else if (signupPage === 3) {
+        // Trigger OTP after Step 3
         try {
-          const fullNum = `+234${data.phoneNumber}`;
-          await signInWithPhone(fullNum);
-          setSignupPage(4); // Jump to OTP verification
-          setProgress(100); // Set progress to 100% for final step
+          const cleanedNumber = data.phoneNumber
+            .replace(/^0+|[^\d]/g, "")
+            .slice(-10);
+          const fullNum = `+234${cleanedNumber}`;
+          if (fullNum.length !== 14 || !/^\+234\d{10}$/.test(fullNum)) {
+            setErrors({
+              phoneError:
+                "Please enter a valid 10-digit phone number (e.g., 8135390524)",
+            });
+            return;
+          }
+          await signInWithPhone(fullNum); // Initiates reCAPTCHA and OTP
+          setData({ ...data, phoneNumber: cleanedNumber }); // Store cleaned number
+          setSignupPage(4); // Move to OTP step
+          setProgress(100); // Full progress
         } catch (error) {
           setErrors({
             ...errors,
             phoneError: "Error sending OTP: " + error.message,
           });
         }
-      } else if (signupPage < 3) {
-        setSignupPage((prev) => prev + 1);
-        setProgress((prev) => prev + 33); // Adjusted for 3 steps + OTP
       }
     }
   };
@@ -66,8 +77,8 @@ const SignUp = () => {
   const handlePrevPage = (e) => {
     e.preventDefault();
     if (signupPage === 4) {
-      setSignupPage(1); // Go back to first page from OTP
-      setProgress(0);
+      setSignupPage(3); // Go back to Step 3 from OTP
+      setProgress(66); // Adjust progress
     } else if (signupPage > 1) {
       setSignupPage((prev) => prev - 1);
       setProgress((prev) => prev - 33);
@@ -81,10 +92,11 @@ const SignUp = () => {
       const newPatientData = {
         ...data,
         uid: user.uid,
+        phoneNumber: data.phoneNumber, // Already cleaned
       };
       setData(newPatientData);
       await createPatientData(newPatientData);
-      navigate("/"); // Redirect to home after successful signup
+      navigate("/"); // Redirect to home
     } catch (error) {
       setErrors({ ...errors, otpError: "Invalid OTP: " + error.message });
     }
@@ -92,7 +104,10 @@ const SignUp = () => {
 
   const handleResendOtp = async () => {
     try {
-      const fullNum = `+234${data.phoneNumber}`;
+      const cleanedNumber = data.phoneNumber
+        .replace(/^0+|[^\d]/g, "")
+        .slice(-10);
+      const fullNum = `+234${cleanedNumber}`;
       await signInWithPhone(fullNum);
       alert("OTP resent!");
     } catch (error) {
@@ -149,13 +164,14 @@ const SignUp = () => {
                   name="phone"
                   id="phone-select"
                   className="box rounded-lg w-[26%] font-bold p-3 text-md"
+                  disabled
                 >
                   <option value="+234">+234</option>
                 </select>
                 <input
                   id="phone"
                   type="number"
-                  placeholder="0812345678"
+                  placeholder="8135390524"
                   className="box rounded-lg w-[73%] p-3 text-md"
                   value={data.phoneNumber}
                   onChange={(e) =>
@@ -165,9 +181,6 @@ const SignUp = () => {
               </div>
               {errors.phoneNumber && (
                 <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
-              )}
-              {errors.phoneError && (
-                <p className="text-red-500 text-sm">{errors.phoneError}</p>
               )}
             </div>
             <button
@@ -276,13 +289,14 @@ const SignUp = () => {
                   name="phone"
                   id="emergencyphone-select"
                   className="box rounded-lg w-[26%] font-bold p-3 text-md"
+                  disabled
                 >
                   <option value="+234">+234</option>
                 </select>
                 <input
                   id="phone"
                   type="number"
-                  placeholder="123-456-7890"
+                  placeholder="8031234567"
                   value={data.emergencyContactNum}
                   className="box rounded-lg w-[73%] p-3 text-md"
                   onChange={(e) =>
@@ -310,6 +324,9 @@ const SignUp = () => {
                 }
               />
             </div>
+            {errors.phoneError && (
+              <p className="text-red-500 text-sm">{errors.phoneError}</p>
+            )}
             <button
               type="button"
               className="cont w-full rounded-lg text-center bg-white border border-2 border-black mt-4 p-2"
