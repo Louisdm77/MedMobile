@@ -81,7 +81,7 @@ const AdminSideBar = () => {
             ))}
 
             <div className=" ">
-              <Link to="/help">
+              <Link to="">
                 <li
                   className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1 "
                   style={{
