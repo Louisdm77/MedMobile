@@ -14,6 +14,9 @@ import Chat from "./pages/chat";
 import Feedback from "./pages/feedback";
 import ProfileEdit from "./components/editProfile";
 import Help from "./pages/help";
+import AdminHome from "./adminPages/home";
+import AdminSignUp from "./adminPages/signUp";
+import AdminLogin from "./adminPages/login";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +85,26 @@ const router = createBrowserRouter([
     path: "/error",
     element: <Error />,
     errorElement: <Error />,
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLogin />,
+    errorElement: <Error />,
+  },
+  {
+    path: "/admin/signup",
+    element: <AdminSignUp />,
+    errorElement: <Error />,
+  },
+  {
+    element: <ProtectedRoutes />, 
+    children: [
+      {
+        path: "/admin/home",
+        element: <AdminHome />,
+        errorElement: <Error />,
+      },
+    ],
   },
 ]);
 

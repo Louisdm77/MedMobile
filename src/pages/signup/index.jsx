@@ -9,6 +9,8 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 import { createPatientData } from "../../repository/post.service";
 import home from "../../assets/images/home.png";
 import OtpInput from "react18-input-otp";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../../assets/firebaseConfig";
 
 const SignUp = () => {
   const { signInWithPhone, verifyCode, data, setData } = useUserAuth();
@@ -16,7 +18,9 @@ const SignUp = () => {
   const [signupPage, setSignupPage] = useState(1);
   const [progress, setProgress] = useState(0);
   const [errors, setErrors] = useState({});
-  const [otp, setOtp] = useState(""); // For OTP input in step 4
+  const [otp, setOtp] = useState("");
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   const validateFields = () => {
     const newErrors = {};
@@ -39,36 +43,78 @@ const SignUp = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Check if phone number exists in Firestore 'patientsData' collection
+  const checkPhoneNumberExists = async (phoneNumber) => {
+    try {
+      const q = query(
+        collection(db, "patientsData"),
+        where("phoneNumber", "==", phoneNumber)
+      );
+      const querySnapshot = await getDocs(q);
+      return !querySnapshot.empty; // Returns true if phone number exists
+    } catch (error) {
+      console.error("Error checking phone number:", error);
+      setErrors({
+        ...errors,
+        phoneError: "Error checking phone number availability.",
+      });
+      return false; // Assume not exists on error
+    }
+  };
+
   const handleNextPage = async (e) => {
     e.preventDefault();
     if (validateFields()) {
       if (signupPage < 3) {
-        // Move to next step without OTP
         setSignupPage((prev) => prev + 1);
-        setProgress((prev) => prev + 33); // Increment progress
+        setProgress((prev) => prev + 33);
       } else if (signupPage === 3) {
-        // Trigger OTP after Step 3
-        try {
-          const cleanedNumber = data.phoneNumber
-            .replace(/^0+|[^\d]/g, "")
-            .slice(-10);
-          const fullNum = `+234${cleanedNumber}`;
-          if (fullNum.length !== 14 || !/^\+234\d{10}$/.test(fullNum)) {
-            setErrors({
-              phoneError:
-                "Please enter a valid 10-digit phone number (e.g., 8135390524)",
-            });
-            return;
-          }
-          await signInWithPhone(fullNum); // Initiates reCAPTCHA and OTP
-          setData({ ...data, phoneNumber: cleanedNumber }); // Store cleaned number
-          setSignupPage(4); // Move to OTP step
-          setProgress(100); // Full progress
-        } catch (error) {
+        const cleanedNumber = data.phoneNumber
+          .replace(/^0+|[^\d]/g, "")
+          .slice(-10);
+        const fullNum = `+234${cleanedNumber}`;
+
+        // Validate phone number format
+        if (fullNum.length !== 14 || !/^\+234\d{10}$/.test(fullNum)) {
           setErrors({
             ...errors,
-            phoneError: "Error sending OTP: " + error.message,
+            phoneError:
+              "Please enter a valid 10-digit phone number (e.g., 8135390524)",
           });
+          return;
+        }
+
+        // Check if phone number exists in Firestore
+        const phoneExists = await checkPhoneNumberExists(cleanedNumber);
+        if (phoneExists) {
+          setErrors({
+            ...errors,
+            phoneError:
+              "This phone number is already registered. Please log in instead.",
+          });
+          return;
+        }
+
+        // Proceed with OTP sending
+        try {
+          await signInWithPhone(fullNum);
+          setData({ ...data, phoneNumber: cleanedNumber });
+          setSignupPage(4);
+          setProgress(100);
+          setErrors({});
+        } catch (error) {
+          if (error.code === "auth/too-many-requests") {
+            setErrors({
+              ...errors,
+              phoneError:
+                "Too many attempts. Please wait a few minutes and try again.",
+            });
+          } else {
+            setErrors({
+              ...errors,
+              phoneError: "Error sending OTP: " + error.message,
+            });
+          }
         }
       }
     }
@@ -77,8 +123,8 @@ const SignUp = () => {
   const handlePrevPage = (e) => {
     e.preventDefault();
     if (signupPage === 4) {
-      setSignupPage(3); // Go back to Step 3 from OTP
-      setProgress(66); // Adjust progress
+      setSignupPage(3);
+      setProgress(66);
     } else if (signupPage > 1) {
       setSignupPage((prev) => prev - 1);
       setProgress((prev) => prev - 33);
@@ -92,17 +138,28 @@ const SignUp = () => {
       const newPatientData = {
         ...data,
         uid: user.uid,
-        phoneNumber: data.phoneNumber, // Already cleaned
+        phoneNumber: data.phoneNumber,
+        address: "", // Default empty fields as per your structure
+        allergies: [],
+        appointments: [],
+        bloodGroup: "",
+        feedback: [],
+        genotype: "",
+        height: "",
+        medicalConditions: [],
+        weight: "",
       };
       setData(newPatientData);
-      await createPatientData(newPatientData);
-      navigate("/"); // Redirect to home
+      await createPatientData(newPatientData); // Save to Firestore
+      navigate("/");
     } catch (error) {
       setErrors({ ...errors, otpError: "Invalid OTP: " + error.message });
     }
   };
 
   const handleResendOtp = async () => {
+    if (resendDisabled) return;
+
     try {
       const cleanedNumber = data.phoneNumber
         .replace(/^0+|[^\d]/g, "")
@@ -110,11 +167,33 @@ const SignUp = () => {
       const fullNum = `+234${cleanedNumber}`;
       await signInWithPhone(fullNum);
       alert("OTP resent!");
+      setErrors({});
+
+      setResendDisabled(true);
+      setResendCooldown(30);
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setResendDisabled(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     } catch (error) {
-      setErrors({
-        ...errors,
-        otpError: "Error resending OTP: " + error.message,
-      });
+      if (error.code === "auth/too-many-requests") {
+        setErrors({
+          ...errors,
+          otpError:
+            "Too many attempts. Please wait a few minutes and try again.",
+        });
+      } else {
+        setErrors({
+          ...errors,
+          otpError: "Error resending OTP: " + error.message,
+        });
+      }
     }
   };
 
@@ -325,7 +404,7 @@ const SignUp = () => {
               />
             </div>
             {errors.phoneError && (
-              <p className="text-red-500 text-sm">{errors.phoneError}</p>
+              <p className="text-red-500 text-sm mt-2">{errors.phoneError}</p>
             )}
             <button
               type="button"
@@ -339,11 +418,11 @@ const SignUp = () => {
       case 4:
         return (
           <div className="w-full p-12 rounded-xl">
-            <div className="shadow-2xl w-full m-auto my-auto p-4 py-6 mt-10 rounded-xl">
-              <h2 className="text-3xl font-bold text-center mt-10">
+            <div className="shadow-2xl w-full m-auto my-auto p-4 py-6 rounded-xl">
+              <h2 className="text-3xl font-bold text-center">
                 OTP VERIFICATION
               </h2>
-              <p className="text-center mt-10">
+              <p className="text-center mt-8">
                 Enter the 6-digit code sent to your phone
               </p>
               <form onSubmit={handleVerifyOtp}>
@@ -376,10 +455,13 @@ const SignUp = () => {
                     Didn't get a code?{" "}
                     <button
                       type="button"
-                      className="underline"
+                      className={`underline ${
+                        resendDisabled ? "text-gray-400 cursor-not-allowed" : ""
+                      }`}
                       onClick={handleResendOtp}
+                      disabled={resendDisabled}
                     >
-                      Resend
+                      Resend {resendCooldown > 0 ? `(${resendCooldown}s)` : ""}
                     </button>
                   </p>
                 </div>
@@ -451,11 +533,11 @@ const SignUp = () => {
                 ))}
               </ProgressBar>
             </div>
-            <div className={`${signupPage !== 4 ? "p-6" : "p-12"}`}>
+            <div className={`${signupPage !== 4 ? "p-6" : "p-6"}`}>
               {renderPage()}
               <div className="text-center flex justify-center items-center font-medium">
                 <button
-                  className="flex items-center mt-6 text-xl"
+                  className="flex items-center text-xl"
                   onClick={handlePrevPage}
                 >
                   <IoArrowBack /> <span>Back</span>

@@ -22,16 +22,15 @@ const login = async (email, password) => {
   }
 };
 
-// const signUp = async (email, password) => {
-//   try {
-//     await createUserWithEmailAndPassword(auth, email, password);
-//   } catch (err) {
-//     console.log(err);
-//     throw err;
-//   }
-// };
+const signUp = async (email, password) => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
 
-// Your commented-out Google sign-in (unchanged)
 // const googleSignIn = async () => {
 //   try {
 //     const googleAuthProvider = new GoogleAuthProvider();
@@ -116,6 +115,13 @@ export const UserAuthProvider = ({ children }) => {
     address: "",
     feedback: [],
     appointments: [],
+  });
+
+  const [adminInfo, setAdminInfo] = useState({
+    fullName: "",
+    uid: "",
+    email: "",
+    phoneNumber: "",
   });
   const [clickedUser, setClickedUser] = useState({
     userId: "",
@@ -203,12 +209,12 @@ export const UserAuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    // signUp,
+    signUp,
     logOut,
-    // googleSignIn, // Still commented out as in your original
+    // googleSignIn,
     login,
-    signInWithPhone, // Added
-    verifyCode, // Added
+    signInWithPhone,
+    verifyCode,
     clicked,
     setClicked,
     data,
