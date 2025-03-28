@@ -34,7 +34,7 @@ const AdminSideBar = () => {
     {
       name: "Consultation",
       icon: <IoIosChatbubbles />,
-      link: "",
+      link: "/admin/consultations",
     },
     {
       name: "Reviews",
@@ -97,7 +97,7 @@ const AdminSideBar = () => {
                   <span className=" text-xl font-medium">Help</span>
                 </li>
               </Link>
-              <Link to="/login" onClick={logOut}>
+              <Link to="/admin/login" onClick={logOut}>
                 <li className="flex items-center  p-3 px-4 hover:bg-gray-500 rounded-xl mt-1">
                   <span className="mr-4 font-bold text-xl ">
                     <MdOutlineLogout />

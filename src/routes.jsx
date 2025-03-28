@@ -17,6 +17,7 @@ import Help from "./pages/help";
 import AdminHome from "./adminPages/home";
 import AdminSignUp from "./adminPages/signUp";
 import AdminLogin from "./adminPages/login";
+import AdminChat from "./adminPages/adminChat";
 
 const router = createBrowserRouter([
   {
@@ -97,11 +98,16 @@ const router = createBrowserRouter([
     errorElement: <Error />,
   },
   {
-    element: <ProtectedRoutes />, 
+    element: <ProtectedRoutes />,
     children: [
       {
         path: "/admin/home",
         element: <AdminHome />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/admin/consultations",
+        element: <AdminChat />,
         errorElement: <Error />,
       },
     ],

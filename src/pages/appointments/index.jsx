@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/layout";
 import Header from "../../components/header";
 import Applications from "../../components/applications";
@@ -7,13 +7,13 @@ import Emergency from "../../components/emergency";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa"; // Combined imports for FaRegBell and FaRegUser
 import { useUserAuth } from "../../assets/context/userAuthContext";
-
+import BookAppointments from "../../components/bookAppointments";
 
 const Appointments = () => {
   return (
     <div>
       <Layout>
-        <div className="w-full ">
+        <div className={`w-full `}>
           <div>
             <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2">
               <div>
@@ -43,6 +43,9 @@ const Appointments = () => {
           <div className="flex ">
             <div className="w-[60%]">
               <Applications />
+            </div>
+            <div>
+              <BookAppointments />
             </div>
             <div className="w-[37%] p-2">
               <MyDatePicker />

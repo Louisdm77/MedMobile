@@ -6,13 +6,13 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser, patientDetail, viewChat, setViewChat } =
+  const { setClickedUser, patientDetail, adminInfo, viewChat, setViewChat } =
     useUserAuth();
   const [lasts, setLasts] = useState([]);
 
   // Fetch user list
   useEffect(() => {
-    const userListRef = collection(db, "admindata");
+    const userListRef = collection(db, "patientsData");
     const unsubscribe = onSnapshot(
       userListRef,
       (snapshot) => {
@@ -56,11 +56,9 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   }, []);
 
   const getLastMsgs = (id) => {
-    if (!patientDetail.uid || !id) return "No messages yet";
+    if (!adminInfo.uid || !id) return "No messages yet";
     const conversationId =
-      patientDetail.uid > id
-        ? `${id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${id}`;
+      adminInfo.uid > id ? `${id}_${adminInfo.uid}` : `${adminInfo.uid}_${id}`;
     const message = lasts.find((msg) => msg.conversationId === conversationId);
     return message ? (
       message.message.text.length > 30 ? (
@@ -74,12 +72,10 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   };
 
   const getLastMsgsTime = (id) => {
-    if (!patientDetail.uid || !id) return "";
+    if (!adminInfo.uid || !id) return "";
 
     const conversationId =
-      patientDetail.uid > id
-        ? `${id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${id}`;
+      adminInfo.uid > id ? `${id}_${adminInfo.uid}` : `${adminInfo.uid}_${id}`;
     const message = lasts.find((msg) => msg.conversationId === conversationId);
 
     if (!message || !message.message.createdAt) return "";

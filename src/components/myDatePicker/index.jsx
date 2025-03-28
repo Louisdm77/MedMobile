@@ -5,10 +5,12 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const MyDatePicker = () => {
   const [selected, setSelected] = useState();
-  const { clicked } = useUserAuth();
-
+  const { clicked, view, setView } = useUserAuth();
+  const handleView = () => {
+    setView(true);
+  };
   return (
-    <div className="relative w-full h-auto flex flex-col rounded-lg bg-white  ">
+    <div className="relative  h-auto flex flex-col rounded-lg bg-white  ">
       <div className="w-full flex justify-center w-full">
         {" "}
         {/* Added this wrapper div */}
@@ -25,7 +27,10 @@ const MyDatePicker = () => {
         </button>
       )}
       {clicked === "Appointments" && (
-        <button className="m-2 border border-2 border-blue-700  rounded-lg p-2 homee ">
+        <button
+          className="m-2 border border-2 border-blue-700  rounded-lg p-2 homee "
+          onClick={handleView}
+        >
           Book New Appointment
         </button>
       )}

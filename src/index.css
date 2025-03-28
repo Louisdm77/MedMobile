@@ -56,6 +56,11 @@ body {
   border: 2px solid rgba(0, 0, 0, 0.5);
 }
 
+.rdp-root {
+  --rdp-day-width: 20px;
+  --rdp-day-height: 20px;
+  --rdp-day_button-border: var(--custom-red);
+}
 .cont {
   background-color: #1f487e;
   border: 2px solid rgba(44, 44, 44, 0.5);
@@ -64,6 +69,9 @@ body {
   font-size: 20px;
 }
 
+.green{
+  color:green
+}
 input {
   outline: none;
 }
@@ -91,5 +99,3 @@ input {
 .font {
   font-weight: 500;
 }
-
-

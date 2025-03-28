@@ -24,7 +24,12 @@ const login = async (email, password) => {
 
 const signUp = async (email, password) => {
   try {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential;
   } catch (err) {
     console.log(err);
     throw err;
@@ -59,6 +64,7 @@ export const UserAuthProvider = ({ children }) => {
   const [clicked, setClicked] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [viewChat, setViewChat] = useState(false);
+  const [adminData, setAdminData] = useState([]);
   const [appExperience, setAppExperience] = useState({
     starRating: 0,
     difficult: "",
@@ -95,6 +101,7 @@ export const UserAuthProvider = ({ children }) => {
   });
   const [otp, setOtp] = useState("");
   const [otpCode, setOtpCode] = useState("");
+  const [view, setView] = useState(true);
   const [data, setData] = useState({
     uid: "",
     fullName: "",
@@ -121,7 +128,9 @@ export const UserAuthProvider = ({ children }) => {
     fullName: "",
     uid: "",
     email: "",
-    phoneNumber: "",
+    specialty: "",
+    docRegNum: "",
+    createdAt: "",
   });
   const [clickedUser, setClickedUser] = useState({
     userId: "",
@@ -153,7 +162,7 @@ export const UserAuthProvider = ({ children }) => {
     };
   }, []);
 
-  // Your original auth state listener (unchanged)
+  //original auth state listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -239,6 +248,12 @@ export const UserAuthProvider = ({ children }) => {
     setStaffExperience,
     viewChat,
     setViewChat,
+    adminInfo,
+    setAdminInfo,
+    adminData,
+    setAdminData,
+    view,
+    setView,
   };
 
   return (
