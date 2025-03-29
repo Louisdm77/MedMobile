@@ -6,7 +6,7 @@ const ProfileEdit = () => {
   return (
     <div>
       <Layout>
-        <DataForm />
+        
       </Layout>
     </div>
   );

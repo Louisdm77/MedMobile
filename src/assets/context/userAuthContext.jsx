@@ -70,6 +70,7 @@ export const UserAuthProvider = ({ children }) => {
     difficult: "",
     improvement: "",
   });
+  const [editProfile, setEditProfile] = useState(false);
   const [staffExperience, setStaffExperience] = useState({
     staff: "",
     lastVisit: "",
@@ -101,7 +102,7 @@ export const UserAuthProvider = ({ children }) => {
   });
   const [otp, setOtp] = useState("");
   const [otpCode, setOtpCode] = useState("");
-  const [view, setView] = useState(true);
+  const [view, setView] = useState(false);
   const [data, setData] = useState({
     uid: "",
     fullName: "",
@@ -254,6 +255,8 @@ export const UserAuthProvider = ({ children }) => {
     setAdminData,
     view,
     setView,
+    editProfile,
+    setEditProfile,
   };
 
   return (

@@ -7,15 +7,16 @@ import PatientContactDetails from "../../components/patientContactDetails";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import EmergencyContactDetails from "../../components/emergencyContactDetails";
 import Emergency from "../../components/emergency";
+import DataForm from "../../components/dataForm";
 const Profile = () => {
-  const { patientDetail } = useUserAuth();
+  const { patientDetail, editProfile } = useUserAuth();
   useEffect(() => {
     console.log("patiennnttt::", patientDetail);
   });
   return (
     <div>
       <Layout>
-        <div className="w-full">
+        <div className={`w-full `}>
           <div>
             <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2">
               <div>
@@ -44,14 +45,15 @@ const Profile = () => {
               </div>
             </div>
           </div>
+          <DataForm />
           <div className="grid grid-cols-2 p-4 ">
             <div className="">
               <EditProfile />
               <PatientContactDetails />
             </div>
             <div>
-              <EmergencyContactDetails className="mt-0"/>
-              <Emergency/>
+              <EmergencyContactDetails className="mt-0" />
+              <Emergency />
             </div>
           </div>
         </div>

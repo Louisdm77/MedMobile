@@ -3,10 +3,11 @@ import fetchPatientDetails from "../fetchPatientDetails";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { updatePatientDetails } from "../../repository/post.service";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { IoArrowBackCircleSharp } from "react-icons/io5";
+import { MdCancel } from "react-icons/md";
 
 const DataForm = () => {
-  const { user, patientDetail, setPatientDetail } = useUserAuth();
+  const { user, patientDetail, setPatientDetail, editProfile, setEditProfile } =
+    useUserAuth();
 
   useEffect(() => {
     fetchPatientDetails(user, setPatientDetail, null);
@@ -21,7 +22,8 @@ const DataForm = () => {
     e.preventDefault();
     try {
       await updatePatientDetails(patientDetail);
-      navigate("/profile");
+      setEditProfile(false);
+      // navigate("/profile");
     } catch (err) {
       console.log(err);
     }
@@ -77,16 +79,22 @@ const DataForm = () => {
   };
 
   return (
-    <div className="p-8 bg-white rounded-lg flex justify-center w-full ">
+    <div
+      className={`p-8  rounded-lg flex justify-center w-200 bg-white top-0 z-50 absolute left-100 ${
+        editProfile ? "block" : "hidden"
+      }`}
+    >
       <form
-        className="w-[80%] p-8 border border-2 rounded-lg bg-gray-100 shadow-inner shadow-md relative"
+        className="w-170 p-8 border border-2 rounded-lg bg-gray-100 shadow-inner shadow-md relative"
         onSubmit={handleSubmit}
       >
         <button
-          className="absolute top-0 left-0 view text-white font-bold p-2 text-xl"
-          onClick={handleBackButton}
+          className="absolute top-0 left-0 view text-white font-bold p-1 text-2xl"
+          onClick={() => {
+            setEditProfile(false);
+          }}
         >
-          <IoArrowBackCircleSharp />
+          <MdCancel />
         </button>
         <p className="text-red-800 text-center">
           ensure to submit the form for proper update
@@ -100,7 +108,7 @@ const DataForm = () => {
               type="text"
               id="fullName"
               value={patientDetail.fullName || ""}
-              className="box w-full p-3 rounded-lg bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box w-full p-1 rounded-lg bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.fullName}
               onChange={handleChange}
             />
@@ -116,7 +124,7 @@ const DataForm = () => {
               type="number"
               id="phoneNumber"
               value={patientDetail.phoneNumber || ""}
-              className="box w-full p-3 rounded-lg bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box w-full p-1 rounded-lg bg-white shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.phoneNumber}
               onChange={handleChange}
             />
@@ -131,7 +139,7 @@ const DataForm = () => {
               id="genotype"
               onChange={handleChange}
               value={patientDetail.genotype || "null"}
-              className="box p-3 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box p-1 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.genotype}
             >
               <option value="">Select Genotype</option>
@@ -153,7 +161,7 @@ const DataForm = () => {
               id="bloodGroup"
               onChange={handleChange}
               value={patientDetail.bloodGroup || ""}
-              className="box p-3 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box p-1 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.bloodGroup}
             >
               <option value="">Select Blood Group</option>
@@ -175,7 +183,7 @@ const DataForm = () => {
             <input
               type="number"
               id="weight"
-              className="box p-3 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box p-1 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.weight}
               value={patientDetail.weight || "null"}
               onChange={handleChange}
@@ -189,7 +197,7 @@ const DataForm = () => {
               type="number"
               id="height"
               value={patientDetail.height || "null"}
-              className="box p-3 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="box p-1 rounded-lg bg-white shadow-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
               // disabled={!!patientDetail.height}
               onChange={handleChange}
             />
@@ -205,7 +213,7 @@ const DataForm = () => {
               <input
                 type="text"
                 id="allergies"
-                className="box p-3 rounded-lg bg-non w-[50%]"
+                className="box p-1 rounded-lg bg-non w-[50%]"
                 onChange={(e) => {
                   setVal(e.target.value);
                 }}
@@ -258,7 +266,7 @@ const DataForm = () => {
               <input
                 type="text"
                 id="medcondition"
-                className="box p-3 rounded-lg bg-non w-[50%]"
+                className="box p-1 rounded-lg bg-non w-[50%]"
                 onChange={(e) => {
                   setCondition(e.target.value);
                 }}
@@ -304,7 +312,7 @@ const DataForm = () => {
         </div>
         <button
           type="submit"
-          className="p-3 border-gray-300 border-2 text-center w-full mt-4 homee"
+          className="p-1 border-gray-300 border-2 text-center w-full mt-4 homee"
         >
           Submit
         </button>

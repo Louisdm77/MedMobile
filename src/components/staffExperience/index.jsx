@@ -149,6 +149,20 @@ const StaffExperience = () => {
       };
 
       await updatePatientDetails(updatedPatientDetail);
+
+      setStaffExperience({
+        staff: "",
+        lastVisit: "",
+        staffExperience: [],
+        suggestion: [],
+        rating: 0,
+        details: "",
+      });
+      setAppExperience({
+        starRating: 0,
+        difficult: "",
+        improvement: "",
+      });
     } catch (err) {
       console.log(err);
     }
