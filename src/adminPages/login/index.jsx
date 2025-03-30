@@ -10,7 +10,7 @@ const AdminLogin = () => {
     password: "",
   });
   const [errorMessages, setErrorMessages] = useState({});
-  const { login } = useUserAuth();
+  const { login, adminInfo, setAdminInfo, user } = useUserAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
@@ -32,6 +32,14 @@ const AdminLogin = () => {
     // Attempt to login
     try {
       await login(userCredential.email, userCredential.password);
+      setAdminInfo({
+        fullName: "",
+        uid: user.uid,
+        email: user.email,
+        specialty: "",
+        docRegNum: "",
+        createdAt: "",
+      });
       navigate("/admin/home");
     } catch (err) {
       console.error("Login error:", err);
