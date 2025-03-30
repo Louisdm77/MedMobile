@@ -24,7 +24,7 @@ const AdminSideBar = () => {
     {
       name: "Appointments",
       icon: <BsCalendarDate />,
-      link: "",
+      link: "/admin/appointments",
     },
     {
       name: "Patient Records",

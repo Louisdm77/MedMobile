@@ -40,6 +40,7 @@ const AdminLogin = () => {
         docRegNum: "",
         createdAt: "",
       });
+      console.log(user)
       navigate("/admin/home");
     } catch (err) {
       console.error("Login error:", err);

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { auth } from "../firebaseConfig";
+import { auth} from "../firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -9,7 +9,7 @@ import {
   signOut,
   getAuth,
   RecaptchaVerifier,
-  signInWithPhoneNumber,
+  signInWithPhoneNumber,updateProfile
 } from "@firebase/auth";
 
 // These are your original functions, unchanged

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoWarningOutline } from "react-icons/io5";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
-import { db } from "../../assets/firebaseConfig"; // Your Firestore config
-import { doc, getDoc, updateDoc } from "@firebase/firestore"; // Import Firestore functions
+import { db } from "../../assets/firebaseConfig";
+import { doc, getDoc, updateDoc } from "@firebase/firestore";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import AppointmentModal from "../appointmentModal";
 
@@ -31,6 +31,7 @@ const Applications = () => {
             ...app,
             date: app.date.toDate().toLocaleDateString(),
             time: app.time,
+            rawDate: app.date, // Store raw date for comparison
           }));
 
           setAppointments(formattedAppointments);
@@ -60,21 +61,54 @@ const Applications = () => {
     // Log to verify which appointment is being canceled
     console.log("Canceling appointment:", appointment);
 
-    // Update Firestore: only the specific appointment
-    const updatedAppointments = appointments.map((app) =>
-      app.id === appointment.id ? updatedAppointment : app
-    );
+    try {
+      const patientDocRef = doc(db, "patientsData", user.uid);
+      const patientSnap = await getDoc(patientDocRef);
+      if (patientSnap.exists()) {
+        const patientData = patientSnap.data();
+        const currentAppointments = patientData.appointments || [];
+        const currentHistory = patientData.appointmentHistory || [];
 
-    await updateDoc(doc(db, "patientsData", user.uid), {
-      appointments: updatedAppointments,
-      appointmentHistory: [...appointmentHistory, updatedAppointment],
-    });
+        // Filter out the canceled appointment from appointments
+        const updatedAppointments = currentAppointments.filter((app) => {
+          const appDate = app.date?.toDate
+            ? app.date.toDate().toISOString()
+            : app.date;
+          const targetDate = appointment.rawDate?.toDate
+            ? appointment.rawDate.toDate().toISOString()
+            : appointment.rawDate;
+          return !(appDate === targetDate && app.time === appointment.time);
+        });
 
-    // Update local state
-    setAppointments(
-      updatedAppointments.filter((app) => app.id !== appointment.id)
-    ); // Remove canceled appointment from upcoming
-    setAppointmentHistory((prev) => [...prev, updatedAppointment].slice(-2)); // Keep only the most recent 2
+        // Add to appointment history
+        const updatedHistory = [...currentHistory, updatedAppointment].slice(
+          -2
+        );
+
+        // Update Firestore
+        await updateDoc(patientDocRef, {
+          appointments: updatedAppointments,
+          appointmentHistory: updatedHistory,
+        });
+
+        // Update local state
+        setAppointments((prev) =>
+          prev.filter(
+            (app) =>
+              !(
+                app.rawDate === appointment.rawDate &&
+                app.time === appointment.time
+              )
+          )
+        );
+        setAppointmentHistory((prev) =>
+          [...prev, updatedAppointment].slice(-2)
+        );
+      }
+    } catch (error) {
+      console.error("Error canceling appointment:", error);
+    }
+
     handleCloseModal();
   };
 
@@ -97,8 +131,8 @@ const Applications = () => {
     // Update local state
     setAppointments(
       updatedAppointments.filter((app) => app.id !== appointment.id)
-    ); // Remove completed appointment from upcoming
-    setAppointmentHistory((prev) => [...prev, updatedAppointment].slice(-1)); // Keep only the most recent 2
+    );
+    setAppointmentHistory((prev) => [...prev, updatedAppointment].slice(-1));
     handleCloseModal();
   };
 
@@ -126,7 +160,7 @@ const Applications = () => {
                   </p>
                 </div>
                 <div className="text-white view p-2 rounded-xl text-sm flex justify-between items-center w-30">
-                  <span>View Details</span> &nbsp;
+                  <span>View Details</span>
                   <span>
                     <FaArrowRightLong />
                   </span>
@@ -150,7 +184,7 @@ const Applications = () => {
                 >
                   <div className="flex-grow">
                     <p>
-                      <span>Doctor:&nbsp; {history.doctor}</span>
+                      <span>Doctor: {history.doctor}</span>
                     </p>
                     <p>
                       <span>Date</span>: <span>{history.date}</span>
@@ -162,11 +196,11 @@ const Applications = () => {
                       <span>
                         {history.status === "Canceled" ? (
                           <span className="flex items-center text-red-500">
-                            <IoWarningOutline /> &nbsp;{history.status}
+                            <IoWarningOutline /> {history.status}
                           </span>
                         ) : (
-                          <span className="text-green-500 flex items-center">
-                            <IoCheckmarkCircleOutline /> &nbsp;{history.status}
+                          <span className="flex items-center text-green-500">
+                            <IoCheckmarkCircleOutline /> {history.status}
                           </span>
                         )}
                       </span>

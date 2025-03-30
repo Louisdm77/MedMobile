@@ -18,6 +18,7 @@ import AdminHome from "./adminPages/home";
 import AdminSignUp from "./adminPages/signUp";
 import AdminLogin from "./adminPages/login";
 import AdminChat from "./adminPages/adminChat";
+import AdminAppointments from "./adminPages/adminAppointments";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,11 @@ const router = createBrowserRouter([
       {
         path: "/admin/consultations",
         element: <AdminChat />,
+        errorElement: <Error />,
+      },
+      {
+        path: "/admin/appointments",
+        element: <AdminAppointments />,
         errorElement: <Error />,
       },
     ],

@@ -5,7 +5,7 @@ import Applications from "../../components/applications";
 import MyDatePicker from "../../components/myDatePicker";
 import Emergency from "../../components/emergency";
 import { IoSearchOutline } from "react-icons/io5";
-import { FaRegBell, FaRegUser } from "react-icons/fa"; // Combined imports for FaRegBell and FaRegUser
+import { FaRegBell, FaRegUser } from "react-icons/fa"; 
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import BookAppointments from "../../components/bookAppointments";
 

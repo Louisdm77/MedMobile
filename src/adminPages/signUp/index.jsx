@@ -9,6 +9,7 @@ import { FaDotCircle } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import home from "../../assets/images/home.png";
 import { collection, addDoc } from "firebase/firestore";
+import { updateProfile } from "@firebase/auth";
 
 const AdminSignUp = () => {
   const { signUp, user, adminInfo, setAdminInfo } = useUserAuth();
@@ -102,6 +103,9 @@ const AdminSignUp = () => {
             createdAt: new Date().toISOString(),
           };
 
+          await updateProfile(user, {
+            displayName: adminInformation.fullName,
+          });
           // Update the adminInfo context
           setAdminInfo(adminData); // Ensure this is called with the correct adminData
 
@@ -111,7 +115,7 @@ const AdminSignUp = () => {
 
           console.log("Document created with ID:", docRef.id);
           console.log("adminData:", adminData); // Log the new adminData
-          console.log("adminInfo:", adminInfo)
+          console.log("adminInfo:", adminInfo);
           console.log("userCredential:", userCredential);
           navigate("/admin/home");
         }
