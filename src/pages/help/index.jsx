@@ -14,9 +14,7 @@ const Help = () => {
           <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2">
             <div>
               <h1 className="font-bold text-2xl">Help</h1>
-              <p className="text-lg">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
+              <p className="text-lg">Get help to your questions.</p>
             </div>
             <div className="relative">
               <input

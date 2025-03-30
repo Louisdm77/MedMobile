@@ -42,9 +42,9 @@ const AdminAppointments = () => {
           <div className="w-[60%]">
             <AdminApplications />
           </div>
-          <div>
+          {/* <div>
             <BookAppointments />
-          </div>
+          </div> */}
           <div className="w-[37%] p-2">
             <AdminDatePicker />
             <Emergency />

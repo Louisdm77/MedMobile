@@ -27,12 +27,12 @@ const AdminSideBar = () => {
       link: "/admin/appointments",
     },
     {
-      name: "Patient Records",
+      name: "Profile",
       icon: <AiOutlineFileText />,
       link: "",
     },
     {
-      name: "Consultation",
+      name: "Chat",
       icon: <IoIosChatbubbles />,
       link: "/admin/consultations",
     },
