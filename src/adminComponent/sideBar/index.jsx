@@ -17,7 +17,7 @@ const AdminSideBar = () => {
 
   const navigation = [
     {
-      name: "Dashboard",
+      name: "Home",
       icon: <IoHomeOutline />,
       link: "/admin/home",
     },
@@ -37,7 +37,7 @@ const AdminSideBar = () => {
       link: "/admin/consultations",
     },
     {
-      name: "Reviews",
+      name: "Statistics",
       icon: <MdOutlineFeedback />,
       link: "",
     },
