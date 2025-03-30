@@ -14,9 +14,13 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       setClicked("Home");
-      console.log(isLoading) // Set clicked to 'Home' when the user is signed in
+      console.log(isLoading); // Set clicked to 'Home' when the user is signed in
     }
   }, [user]);
+
+  useEffect(() => {
+    console.log("user:", user);
+  }, []);
 
   if (isLoading) {
     return (

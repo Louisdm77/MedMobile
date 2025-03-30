@@ -6,6 +6,7 @@ import MyDatePicker from "../../components/myDatePicker";
 import Emergency from "../../components/emergency";
 import BookAppointments from "../../components/bookAppointments";
 import AdminApplications from "../../adminComponent/adminApplications";
+import AdminDatePicker from "../../adminComponent/adminDatePicker";
 
 const AdminAppointments = () => {
   return (
@@ -45,7 +46,7 @@ const AdminAppointments = () => {
             <BookAppointments />
           </div>
           <div className="w-[37%] p-2">
-            <MyDatePicker />
+            <AdminDatePicker />
             <Emergency />
           </div>
         </div>

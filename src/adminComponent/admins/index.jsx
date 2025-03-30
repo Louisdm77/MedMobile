@@ -6,14 +6,21 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser, patientDetail, adminInfo, viewChat, setViewChat } =
-    useUserAuth();
+  const {
+    setClickedUser,
+    patientDetail,
+    adminInfo,
+    viewChat,
+    setViewChat,
+    user,
+  } = useUserAuth(); // Added user to destructuring
   const [lasts, setLasts] = useState([]);
 
   // Log context data
   useEffect(() => {
-    console.log("Admin Info:", adminInfo);
-  }, [adminInfo]);
+    console.log("User (from auth):", user);
+    console.log("Admin Info:", adminInfo); // Keep for debugging
+  }, [user, adminInfo]);
 
   // Fetch user list (patients for admin)
   useEffect(() => {
@@ -61,12 +68,13 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   }, []);
 
   const getLastMsgs = (id) => {
-    if (!adminInfo?.uid || !id) {
-      console.log("Missing adminInfo.uid or patient id:", { adminInfo, id });
+    if (!user?.uid || !id) {
+      // Changed to user.uid
+      console.log("Missing user.uid or patient id:", { user, id });
       return "No messages yet";
     }
     const conversationId =
-      adminInfo.uid > id ? `${id}_${adminInfo.uid}` : `${adminInfo.uid}_${id}`;
+      user.uid > id ? `${id}_${user.uid}` : `${user.uid}_${id}`; // Changed to user.uid
     const message = lasts.find((msg) => msg.conversationId === conversationId);
     console.log(`Looking for conversationId: ${conversationId}`, message);
     return message ? (
@@ -81,10 +89,10 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   };
 
   const getLastMsgsTime = (id) => {
-    if (!adminInfo?.uid || !id) return "";
+    if (!user?.uid || !id) return ""; // Changed to user.uid
 
     const conversationId =
-      adminInfo.uid > id ? `${id}_${adminInfo.uid}` : `${adminInfo.uid}_${id}`;
+      user.uid > id ? `${id}_${user.uid}` : `${user.uid}_${id}`; // Changed to user.uid
     const message = lasts.find((msg) => msg.conversationId === conversationId);
 
     if (!message || !message.message.createdAt) return "";
@@ -120,13 +128,13 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   // Sort users by last message timestamp (most recent first)
   const sortedUsers = [...users].sort((a, b) => {
     const aConversationId =
-      adminInfo?.uid > a.id
-        ? `${a.id}_${adminInfo?.uid}`
-        : `${adminInfo?.uid}_${a.id}`;
+      user?.uid > a.id // Changed to user.uid
+        ? `${a.id}_${user?.uid}`
+        : `${user?.uid}_${a.id}`;
     const bConversationId =
-      adminInfo?.uid > b.id
-        ? `${b.id}_${adminInfo?.uid}`
-        : `${adminInfo?.uid}_${b.id}`;
+      user?.uid > b.id // Changed to user.uid
+        ? `${b.id}_${user?.uid}`
+        : `${user?.uid}_${b.id}`;
 
     const aMessage = lasts.find(
       (msg) => msg.conversationId === aConversationId

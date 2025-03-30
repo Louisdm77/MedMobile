@@ -75,6 +75,7 @@ const BookAppointments = () => {
       appointmentType: appointmentDetails.appointmentType,
       notes: appointmentDetails.notes,
       status: appointmentDetails.status,
+      patientName: user.fullName || patientDetail.fullName || "Unknown Patient",
     };
 
     try {
@@ -93,9 +94,10 @@ const BookAppointments = () => {
         appointmentType: "virtual",
         notes: "",
         status: "pending",
+        patientName: "",
       });
 
-      console.log("Appointment successfully added!");
+      console.log("Appointment successfully added!:", appointmentDetails);
     } catch (error) {
       console.error("Error adding appointment: ", error);
     }

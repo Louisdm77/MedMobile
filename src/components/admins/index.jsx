@@ -6,11 +6,17 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser, patientDetail, viewChat, setViewChat } =
+  const { setClickedUser, patientDetail, viewChat, setViewChat, user } = // Added user
     useUserAuth();
   const [lasts, setLasts] = useState([]);
 
-  // Fetch user list
+  // Log context data for debugging
+  useEffect(() => {
+    console.log("User (from auth):", user);
+    console.log("Patient Detail:", patientDetail);
+  }, [user, patientDetail]);
+
+  // Fetch user list (admins for patient)
   useEffect(() => {
     const userListRef = collection(db, "admindata");
     const unsubscribe = onSnapshot(
@@ -20,15 +26,15 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
           id: doc.id,
           ...doc.data(),
         }));
-        console.log("Snapshot Data:", usersList);
+        console.log("Snapshot Data (Admins):", usersList);
         setUsers(usersList);
       },
       (error) => {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching admins:", error);
       }
     );
     return () => {
-      console.log("Unsubscribing from user updates");
+      console.log("Unsubscribing from admin updates");
       unsubscribe();
     };
   }, []);
@@ -43,7 +49,7 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
           ...doc.data(),
         }));
         setLasts(lastMessages);
-        console.log("Last Messages:", lastMessages);
+        console.log("Last Messages (Patient):", lastMessages);
       },
       (error) => {
         console.error("Error fetching last messages:", error);
@@ -56,11 +62,12 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   }, []);
 
   const getLastMsgs = (id) => {
-    if (!patientDetail.uid || !id) return "No messages yet";
+    if (!user?.uid || !id) { // Changed to user.uid
+      console.log("Missing user_touch or admin id:", { user, id });
+      return "No messages yet";
+    }
     const conversationId =
-      patientDetail.uid > id
-        ? `${id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${id}`;
+      user.uid > id ? `${id}_${user.uid}` : `${user.uid}_${id}`; // Changed to user.uid
     const message = lasts.find((msg) => msg.conversationId === conversationId);
     return message ? (
       message.message.text.length > 30 ? (
@@ -74,12 +81,10 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   };
 
   const getLastMsgsTime = (id) => {
-    if (!patientDetail.uid || !id) return "";
+    if (!user?.uid || !id) return ""; // Changed to user.uid
 
     const conversationId =
-      patientDetail.uid > id
-        ? `${id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${id}`;
+      user.uid > id ? `${id}_${user.uid}` : `${user.uid}_${id}`; // Changed to user.uid
     const message = lasts.find((msg) => msg.conversationId === conversationId);
 
     if (!message || !message.message.createdAt) return "";
@@ -89,7 +94,6 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
 
-    // Reset time portion for accurate date comparison
     const resetTime = (date) =>
       new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const msgDay = resetTime(msgDate);
@@ -116,13 +120,13 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   // Sort users by last message timestamp (most recent first)
   const sortedUsers = [...users].sort((a, b) => {
     const aConversationId =
-      patientDetail.uid > a.id
-        ? `${a.id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${a.id}`;
+      user?.uid > a.id // Changed to user.uid
+        ? `${a.id}_${user?.uid}`
+        : `${user?.uid}_${a.id}`;
     const bConversationId =
-      patientDetail.uid > b.id
-        ? `${b.id}_${patientDetail.uid}`
-        : `${patientDetail.uid}_${b.id}`;
+      user?.uid > b.id // Changed to user.uid
+        ? `${b.id}_${user?.uid}`
+        : `${user?.uid}_${b.id}`;
 
     const aMessage = lasts.find(
       (msg) => msg.conversationId === aConversationId

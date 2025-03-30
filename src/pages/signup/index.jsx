@@ -11,6 +11,7 @@ import home from "../../assets/images/home.png";
 import OtpInput from "react18-input-otp";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../assets/firebaseConfig";
+import { updateProfile } from "@firebase/auth";
 
 const SignUp = () => {
   const { signInWithPhone, verifyCode, data, setData } = useUserAuth();
@@ -151,6 +152,12 @@ const SignUp = () => {
       };
       setData(newPatientData);
       await createPatientData(newPatientData); // Save to Firestore
+      console.log("data:", data);
+      await updateProfile(user, {
+        displayName: data.fullName,
+      });
+      console.log(user);
+
       navigate("/");
     } catch (error) {
       setErrors({ ...errors, otpError: "Invalid OTP: " + error.message });
