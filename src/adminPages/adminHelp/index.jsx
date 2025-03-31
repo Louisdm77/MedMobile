@@ -6,7 +6,7 @@ import Faq from "../../components/faq";
 import ContactSupport from "../../components/contactSupport";
 import Chatbot from "../../components/chatBot";
 
-const Help = () => {
+const AdminHelp = () => {
   return (
     <Layout>
       <div>
@@ -50,4 +50,4 @@ const Help = () => {
   );
 };
 
-export default Help;
+export default AdminHelp;

@@ -32,7 +32,7 @@ const Notifications = () => {
   return (
     <div>
       <h2 className="homee font-semibold mb-1 p-1">Notifications</h2>
-      <div className=" shadow-lg bg-white p-3 rounded-md text-sm">
+      <div className="  bg-white p-3 rounded-md text-sm">
         <div className="flex justify-between items-center">
           <div>Appointment Reminders</div>
           <div>

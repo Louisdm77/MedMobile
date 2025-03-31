@@ -1,12 +1,15 @@
 import React from "react";
 // import { Link } from "react-router-dom";
 import { useUserAuth } from "../../assets/context/userAuthContext";
+import dp from "../../assets/images/doc.jpg";
 
 const EditProfile = () => {
   const { editProfile, setEditProfile } = useUserAuth();
   return (
     <div className="flex ml-4 relative justify-center">
-      <div className="color rounded-full w-20 h-20 mr-10"></div>
+      <div className=" rounded-full w-25 h-25 mr-10">
+        <img src={dp} alt="" className="h-full w-full rounded-full" />
+      </div>
       <div>
         <button
           to=""

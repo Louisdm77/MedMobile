@@ -5,7 +5,7 @@ import { DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 import { collection, getDocs, updateDoc, doc } from "@firebase/firestore";
 import { db } from "../../assets/firebaseConfig";
-import dp from "../../assets/images/profile.avif";
+import dp from "../../assets/images/doc.jpg";
 import { FaRegStar } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 
@@ -66,8 +66,8 @@ const BookAppointments = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting appointment..."); // Debug log
 
-    // Create appointment object
     const appointment = {
       doctor: appointmentDetails.selectedDoctor,
       date: appointmentDetails.selectedDate,
@@ -75,33 +75,29 @@ const BookAppointments = () => {
       appointmentType: appointmentDetails.appointmentType,
       notes: appointmentDetails.notes,
       status: appointmentDetails.status,
-      patientName: user.fullName || patientDetail.fullName || "Unknown Patient",
+      patientName:
+        user.displayName || patientDetail.fullName || "Unknown Patient",
     };
 
     try {
-      // Update the patient's document in Firestore
-      const patientDocRef = doc(db, "patientsData", user.uid); // Use user's UID to identify the document
+      console.log("Appointment Data:", appointment); // Debug log
+      const patientDocRef = doc(db, "patientsData", user.uid);
+      console.log("Updating Firestore for UID:", user.uid); // Debug log
       await updateDoc(patientDocRef, {
-        appointments: [...patientDetail.appointments, appointment], // Push the new appointment into the appointments array
+        appointments: [...patientDetail.appointments, appointment],
       });
+      console.log("Firestore update successful"); // Debug log
 
-      // Reset the appointment details
-      setAppointmentDetails({
-        currentStep: 1,
-        selectedDoctor: null,
-        selectedDate: null,
-        selectedTime: null,
-        appointmentType: "virtual",
-        notes: "",
-        status: "pending",
-        patientName: "",
+      // Move to success step
+      setAppointmentDetails((prev) => {
+        console.log("Setting currentStep to 4"); // Debug log
+        return { ...prev, currentStep: 4 };
       });
-
-      console.log("Appointment successfully added!:", appointmentDetails);
     } catch (error) {
       console.error("Error adding appointment: ", error);
     }
   };
+
   const handleView = () => {
     setView(false);
   };
@@ -159,7 +155,7 @@ const BookAppointments = () => {
           <button
             onClick={handleContinue}
             className="w-full view text-white p-2 rounded hover:bg-blue-600 mt-4"
-            disabled={!appointmentDetails.selectedDoctor} // Disable if no doctor selected
+            disabled={!appointmentDetails.selectedDoctor}
           >
             Continue
           </button>
@@ -199,7 +195,7 @@ const BookAppointments = () => {
                 disabled={
                   !appointmentDetails.selectedDate ||
                   !appointmentDetails.selectedTime
-                } // Disable if no date/time selected
+                }
               >
                 Continue
               </button>
@@ -271,7 +267,7 @@ const BookAppointments = () => {
           <button
             onClick={(e) => {
               handleSubmit(e);
-              handleView();
+              // handleView(); // Removed to stay on success page
             }}
             className="w-full view text-white p-2 rounded hover:bg-blue-600"
           >
@@ -282,6 +278,30 @@ const BookAppointments = () => {
             className="w-full bg-gray-300 text-black p-2 rounded hover:bg-gray-400 mt-2"
           >
             Back
+          </button>
+        </div>
+      )}
+
+      {appointmentDetails.currentStep === 4 && (
+        <div className="flex flex-col items-center justify-center h-full text-center">
+          <h3 className="font-bold text-lg text-green-600 mb-4">
+            Booking Successful!
+          </h3>
+          <p className="text-sm text-gray-700 mb-6">
+            Your appointment has been booked successfully. Please reload the
+            page to see it.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="w-full view text-white p-2 rounded hover:bg-blue-600"
+          >
+            Reload Page
+          </button>
+          <button
+            onClick={handleView}
+            className="w-full bg-gray-300 text-black p-2 rounded hover:bg-gray-400 mt-2"
+          >
+            Close
           </button>
         </div>
       )}

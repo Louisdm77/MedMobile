@@ -261,7 +261,7 @@ const AdminSignUp = () => {
             </div>
             <div className="grid mt-2">
               <label htmlFor="docRegNum" className="font-bold">
-                Doctor Registration Number
+                Staff Number
               </label>
               <input
                 id="docRegNum"

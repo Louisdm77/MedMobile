@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useUserAuth } from "../../assets/context/userAuthContext";
 import { collection, getDocs } from "@firebase/firestore";
 import { db } from "../../assets/firebaseConfig";
+import { TbCancel } from "react-icons/tb";
 
 const TodaysAppointments = () => {
   const { user } = useUserAuth();
@@ -79,18 +80,23 @@ const TodaysAppointments = () => {
       <h2 className="font-semibold text-lg mb-4">Today's Appointments</h2>
       <div className="bg-white p-4 rounded-xl">
         {todayAppointments.length === 0 ? (
-          <div className="text-center">
-            <p className="font-bold text-gray-700">
-              No appointments today, Doc.
+          <div className="text-center flex flex-col justify-center">
+            <p className="font-bold text-gray-700 m-auto">
+              <TbCancel className="text-gray-400 text-2xl m-auto" />
             </p>
-            <p className="text-sm text-gray-500 mt-2">
-              {nextAppointment
-                ? `Next appointment is on ${
-                    nextAppointment.date?.toDate
-                      ? nextAppointment.date.toDate().toLocaleDateString()
-                      : new Date(nextAppointment.date).toLocaleDateString()
-                  }`
-                : "No upcoming appointments scheduled."}
+            <p className="text-md text-gray-600 mt-2">
+              {nextAppointment ? (
+                `Next appointment is on ${
+                  nextAppointment.date?.toDate
+                    ? nextAppointment.date.toDate().toLocaleDateString()
+                    : new Date(nextAppointment.date).toLocaleDateString()
+                }`
+              ) : (
+                <div className="block text-center">
+                  {" "}
+                  "No upcoming appointments scheduled."
+                </div>
+              )}
             </p>
           </div>
         ) : (

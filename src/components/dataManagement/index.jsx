@@ -5,7 +5,7 @@ const DataManagement = () => {
   return (
     <div>
       <h2 className="homee font-semibold mb-1 mt-2 p-1">Data Management</h2>
-      <div className=" shadow-lg bg-white p-3 rounded-md text-sm">
+      <div className="bg-white p-3 rounded-md text-sm">
         <Link className="flex justify-between items-center ">
           <p>Download My Data</p>
         </Link>

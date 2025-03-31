@@ -163,7 +163,7 @@ const HomeChatPreview = () => {
                 <div>
                   <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
                 </div>
-                <div className="text-black font-bold">
+                <div className="text-black ">
                   <span className="capitalize">
                     {patient.fullName || "User"}
                   </span>

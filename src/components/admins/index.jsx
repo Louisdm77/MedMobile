@@ -6,8 +6,13 @@ import { useUserAuth } from "../../assets/context/userAuthContext";
 
 const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   const [users, setUsers] = useState([]);
-  const { setClickedUser, patientDetail, viewChat, setViewChat, user } = // Added user
-    useUserAuth();
+  const {
+    setClickedUser,
+    patientDetail,
+    viewChat,
+    setViewChat,
+    user,
+  } = useUserAuth(); // Added user
   const [lasts, setLasts] = useState([]);
 
   // Log context data for debugging
@@ -62,7 +67,8 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
   }, []);
 
   const getLastMsgs = (id) => {
-    if (!user?.uid || !id) { // Changed to user.uid
+    if (!user?.uid || !id) {
+      // Changed to user.uid
       console.log("Missing user_touch or admin id:", { user, id });
       return "No messages yet";
     }
@@ -165,8 +171,10 @@ const Admins = ({ otherUserId, otherUserName, conversationId }) => {
                 <div>
                   <LiaUser className="bg-gray-400 text-white rounded-full text-4xl mr-3" />
                 </div>
-                <div className="text-black font-bold">
-                  <span className="capitalize">{user.fullName || "User"}</span>{" "}
+                <div className="text-black ">
+                  <span className="capitalize">
+                    Dr. {user.fullName || "User"}
+                  </span>{" "}
                   <br />
                   <span className="text-sm text-gray-500">
                     {getLastMsgs(user.id)}
