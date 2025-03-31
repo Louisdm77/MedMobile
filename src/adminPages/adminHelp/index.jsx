@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../components/layout";
+import AdminLayout from "../../adminComponent/layout";
 import { IoSearchOutline } from "react-icons/io5";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 import Faq from "../../components/faq";
@@ -8,7 +8,7 @@ import Chatbot from "../../components/chatBot";
 
 const AdminHelp = () => {
   return (
-    <Layout>
+    <AdminLayout>
       <div>
         <div>
           <div className="p-4 grid grid-cols-[55%_30%_10%] gap-4 items-center mt-2">
@@ -46,7 +46,7 @@ const AdminHelp = () => {
           <div></div>
         </div>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 };
 

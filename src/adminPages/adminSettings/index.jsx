@@ -1,5 +1,5 @@
 import { React } from "react";
-import Layout from "../../components/layout";
+import AdminLayout from "../../adminComponent/layout";
 import Notifications from "../../components/notifications";
 import Privacy from "../../components/privacy";
 import Customization from "../../components/customization";
@@ -9,7 +9,7 @@ import { FaRegBell, FaRegUser } from "react-icons/fa";
 const AdminSettings = () => {
   return (
     <div>
-      <Layout>
+      <AdminLayout>
         <div>
           <div>
             {" "}
@@ -51,7 +51,7 @@ const AdminSettings = () => {
             <div></div>
           </div>
         </div>
-      </Layout>
+      </AdminLayout>
     </div>
   );
 };
